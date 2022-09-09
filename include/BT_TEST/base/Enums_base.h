@@ -79,5 +79,4 @@ namespace BT_TEST
             return const_cast<char *>("None");
         }
     }
-
 }
