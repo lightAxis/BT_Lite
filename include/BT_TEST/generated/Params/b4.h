@@ -18,6 +18,20 @@ namespace BT_TEST
             void set(const float &v) override { paramServer.set_b4(v); }
             Param getParamType() const override { return Param::b4__float; }
 
+            delegate<float(void)> makeGetter() const override
+            {
+                delegate<float(void)> del;
+                del.set<PARAM_b4, &PARAM_b4::get>(*this);
+                return del;
+            }
+
+            delegate<void(const float &)> makeSetter() override
+            {
+                delegate<void(const float &)> del;
+                del.set<PARAM_b4, &PARAM_b4::set>(*this);
+                return del;
+            }
+
         protected:
         };
     }
