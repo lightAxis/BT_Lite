@@ -15,7 +15,7 @@ namespace BT_TEST
         Inverter = 8,
         KeepRunningUntilFailure = 9,
         Repeat = 10,
-        RetryUntilSuccess = 11,
+        RetryUntilSuccessful = 11,
         Timeout = 12,
 
         // Custom
@@ -49,8 +49,8 @@ namespace BT_TEST
                 return const_cast<char *>("KeepRunningUntilFailure");
             case Decorator::Repeat:
                 return const_cast<char *>("Repeat");
-            case Decorator::RetryUntilSuccess:
-                return const_cast<char *>("RetryUntilSuccess");
+            case Decorator::RetryUntilSuccessful:
+                return const_cast<char *>("RetryUntilSuccessful");
             case Decorator::Timeout:
                 return const_cast<char *>("Timeout");
             case Decorator::CustomDecorator1:

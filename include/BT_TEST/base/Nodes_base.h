@@ -25,5 +25,8 @@
 #include "Decorators/ForceSuccess.h"
 #include "Decorators/Inverter.h"
 #include "Decorators/KeepRunningUntilFailure.h"
+#include "Decorators/Repeat.h"
+#include "Decorators/RetryUntillSuccessful.h"
 
 // SubTrees
+#include "SubTree/RootTree.h"
