@@ -7,26 +7,30 @@ namespace BT_TEST
 {
     namespace PARAM
     {
-        template <bool IsBlackBoard>
         class PARAM_b1 : public ParamBase<int>
         {
         public:
             PARAM_b1() : ParamBase<int>() {}
             virtual ~PARAM_b1() = default;
 
-            int get() override
-            {
-                if (IsBlackBoard)
-                    return paramServer.get_b1();
-                return this->_internal;
-            }
-            void set(const int &v) override
-            {
-                if (IsBlackBoard)
-                    paramServer.set_b1(v);
-                this->_internal = v;
-            }
+            int get() const override { return paramServer.get_b1(); }
+            void set(const int &v) override { paramServer.set_b1(v); }
             Param getParamType() const override { return Param::b1__int; }
+            char *getName() const override { return Cvt::getParamName(getParamType()); }
+
+            delegate<int(void)> makeGetter() const override
+            {
+                delegate<int(void)> del;
+                del.set<PARAM_b1, &PARAM_b1::get>(*this);
+                return del;
+            }
+
+            delegate<void(const int &)> makeSetter() override
+            {
+                delegate<void(const int &)> del;
+                del.set<PARAM_b1, &PARAM_b1::set>(*this);
+                return del;
+            }
 
         protected:
         };

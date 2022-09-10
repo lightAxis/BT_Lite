@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <assert.h>
 
 namespace BT_TEST
 {
@@ -79,10 +80,13 @@ namespace BT_TEST
 
             bool addChild(NodeBase *child)
             {
+                assert(_child_num < ChildN);
+
                 if (_child_num >= ChildN)
                     return false;
 
                 _children[_child_num] = child;
+                _child_num++;
                 return true;
             }
 
@@ -102,6 +106,8 @@ namespace BT_TEST
 
             bool setChild(NodeBase *child)
             {
+                assert(_child == nullptr);
+
                 if (_child != nullptr)
                     return false;
 
@@ -124,6 +130,8 @@ namespace BT_TEST
 
             bool setChild(NodeBase *child)
             {
+                assert(_child == nullptr);
+
                 if (_child != nullptr)
                     return false;
 
@@ -145,12 +153,15 @@ namespace BT_TEST
             ParamBase(){};
             virtual ~ParamBase() = default;
 
-            virtual T get() = 0;
+            virtual T get() const = 0;
             virtual void set(const T &v) = 0;
             virtual Param getParamType() const = 0;
+            virtual char *getName() const = 0;
+
+            virtual delegate<T(void)> makeGetter() const = 0;
+            virtual delegate<void(const T &)> makeSetter() = 0;
 
         protected:
-            T _internal;
         };
     }
 

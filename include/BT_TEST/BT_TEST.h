@@ -7,47 +7,27 @@
 namespace BT_TEST
 {
 
-    class test__
+    static void
+    test()
     {
-    public:
-        test__(PARAM::PARAM_b1<false> b1) : _b1(b1) {}
-        ~test__() = default;
+        NODE::CONTROL_IfThenElse<3> ifthenelse;
 
-        int getB1() { return _b1.get(); }
+        NODE::ACTION_AlwaysSuccess succ1;
+        NODE::ACTION_AlwaysFailure fail1;
 
-    private:
-        PARAM::PARAM_b1<false> _b1;
-    };
-    class test_
-    {
-    public:
-        test_(PARAM::PARAM_b1<true> b1) : _b1(b1) {}
-        ~test_() = default;
+        PARAM::PARAM_Const_uint8_t uint8t(5);
+        PARAM::PARAM_Const_uint8_t uint8t2(3);
 
-        int getB1() { return _b1.get(); }
+        NODE::CONTROL_Parallel<6> para{uint8t.makeGetter(), uint8t2.makeGetter()};
+        para.addChild(&succ1);
+        para.addChild(&succ1);
+        para.addChild(&fail1);
+        para.addChild(&succ1);
+        para.addChild(&fail1);
+        para.addChild(&succ1);
 
-    private:
-        PARAM::PARAM_b1<true> _b1;
-    };
+        para.Tick();
 
-    static void test()
-    {
-        PARAM::PARAM_b1<false> b1;
-        PARAM::PARAM_b1<true> b1_;
-        PARAM::PARAM_b1<true> b1__;
-
-        b1.set(43);
-        b1_.set(56);
-
-        printf("nor : %d, blackb : %d, linkedBlackb : %d \n", b1.get(), b1_.get(), b1__.get());
-
-        test_ test1(b1_);
-        test_ test2(b1__);
-        printf("test1 : %d, test2 : %d\n", test1.getB1(), test2.getB1());
-
-        test__ test3(b1);
-        b1.set(4);
-        test__ test4(b1);
-        printf("test3 : %d, test4 : %d \n", test3.getB1(), test4.getB1());
+        return;
     }
 }
