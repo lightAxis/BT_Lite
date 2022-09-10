@@ -4,6 +4,8 @@
 
 int main(int argc, char **argv)
 {
-    printf("this is test");
+    BT_TEST::test();
+
+    printf("this is test\n");
     return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Enums.h"
+#include "Delegate.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -64,7 +65,7 @@ namespace BT_TEST
         class ControlBase : public NodeBase
         {
         public:
-            ControlBase() : NodeBase(), _child_num(0);
+            ControlBase() : NodeBase(), _child_num(0)
             {
                 for (uint8_t i = 0; i < ChildN; i++)
                 {
@@ -132,6 +133,24 @@ namespace BT_TEST
 
         protected:
             NodeBase *_child;
+        };
+    }
+
+    namespace PARAM
+    {
+        template <typename T>
+        class ParamBase
+        {
+        public:
+            ParamBase(){};
+            virtual ~ParamBase() = default;
+
+            virtual T get() = 0;
+            virtual void set(const T &v) = 0;
+            virtual Param getParamType() const = 0;
+
+        protected:
+            T _internal;
         };
     }
 
