@@ -21,28 +21,38 @@ namespace BT_TEST
 
             NodeStatus Tick() override
             {
-                NodeStatus result = this->_children[0]->Tick();
-                if (result == NodeStatus::SUCCESS)
+                printf("name:%s, uid:%d\n", getName(), this->getUID());
+                NodeStatus result{NodeStatus::IDLE};
+                if (!_isRunningReactive)
                 {
-                    result = this->_children[1]->Tick();
-                    this->setStatus(result);
-                    return this->getStatus();
+                    result = this->_children[0]->Tick();
+
+                    if (result == NodeStatus::SUCCESS)
+                        _child_to_tick = 1;
+                    else if (result == NodeStatus::FAILURE)
+                        _child_to_tick = 2;
+                    else
+                    {
+                        this->setStatus(NodeStatus::RUNNING);
+                        return this->getStatus();
+                    }
                 }
-                else if (result == NodeStatus::FAILURE)
-                {
-                    result = this->_children[2]->Tick();
-                    this->setStatus(result);
-                    return this->getStatus();
-                }
-                this->setStatus(NodeStatus::RUNNING);
+
+                result = this->_children[_child_to_tick]->Tick();
+                if (result == NodeStatus::RUNNING)
+                    _isRunningReactive = true;
+                else
+                    _isRunningReactive = false;
+
+                this->setStatus(result);
                 return this->getStatus();
             }
 
-            void Reset() override
-            {
-            }
+            void Reset() override {}
 
         private:
+            uint8_t _child_to_tick = 0;
+            bool _isRunningReactive{false};
         };
     }
 }
