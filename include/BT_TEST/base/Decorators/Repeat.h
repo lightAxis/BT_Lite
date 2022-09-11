@@ -20,6 +20,7 @@ namespace BT_TEST
 
             NodeStatus Tick() override
             {
+                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 uint8_t repeatNum = _repeat_get();
                 NodeStatus result;
 

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Enums.h"
-#include "Nodes.h"
-#include "Params.h"
+#include "generated/Tree_gen.h"
 
 namespace BT_TEST
 {
@@ -71,15 +69,11 @@ namespace BT_TEST
 
         NODE::testTick asdfadsf;
 
-        NODE::ACTION_CustomAction1<float, int> ac{
-            b3.makeGetter(),
-            b1.makeSetter(),
-            asdfadsf.makeTickDel()};
-
-        ac.Tick();
-        printf("new b1 : %d\n", b1.get());
-        ac.Tick();
+        NODE::ACTION_CustomAction1::_tickDel ACTION_CustomAction_tickDel;
+        ACTION_CustomAction_tickDel = asdfadsf.makeTickDel();
 
         return;
     }
+
+    static Tree RootTree;
 }

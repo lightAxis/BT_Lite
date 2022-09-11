@@ -17,6 +17,7 @@ namespace BT_TEST
 
             NodeStatus Tick() override
             {
+                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 assert(0); // Delay node is not implemented
             }
 

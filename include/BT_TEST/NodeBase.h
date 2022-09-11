@@ -104,7 +104,7 @@ namespace BT_TEST
 
             virtual Decorator getDecoratorType() const = 0;
 
-            bool setChild(NodeBase *child)
+            bool addChild(NodeBase *child)
             {
                 assert(_child == nullptr);
 
@@ -128,7 +128,7 @@ namespace BT_TEST
 
             virtual SubTree getSubTreeType() const = 0;
 
-            bool setChild(NodeBase *child)
+            bool addChild(NodeBase *child)
             {
                 assert(_child == nullptr);
 

@@ -16,6 +16,7 @@ namespace BT_TEST
             int get() const override { return paramServer.get_b2(); }
             void set(const int &v) override { paramServer.set_b2(v); }
             Param getParamType() const override { return Param::b2__int; }
+            char *getName() const override { return Cvt::getParamName(getParamType()); }
 
             delegate<int(void)> makeGetter() const override
             {
