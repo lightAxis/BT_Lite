@@ -26,6 +26,28 @@ namespace BT_TEST
 
         private:
         };
+
+        class testTick
+        {
+        public:
+            NodeStatus TickDelegate(const float &f, int *i, NodeBase *node)
+            {
+                printf("this is node : %s , customActionTick\n", node->getName());
+                printf("now state : %s\n", Cvt::getNodeStatusName(node->getStatus()));
+                printf("%f, %d\n", f, *i);
+                *i = f * 10;
+                printf("%f, %d\n", f, *i);
+                return NodeStatus::SUCCESS;
+            }
+
+            delegate<NodeStatus(const float &, int *, NodeBase *)> makeTickDel()
+            {
+                delegate<NodeStatus(const float &, int *, NodeBase *)> del;
+                del.set<testTick, &testTick::TickDelegate>(*this);
+                return del;
+            }
+        };
+
     }
 
     static void
@@ -42,26 +64,21 @@ namespace BT_TEST
         PARAM::PARAM_Const_uint8_t u2(3);
         PARAM::PARAM_Const_uint8_t u3(32);
 
-        NODE::CONTROL_WhileDoElse<3> wde;
+        PARAM::PARAM_b1 b1;
+        b1.set(34);
+        PARAM::PARAM_b3 b3;
+        b3.set(533);
 
-        wde.addChild(&succ1);
-        wde.addChild(&runn1);
-        wde.addChild(&fail1);
+        NODE::testTick asdfadsf;
 
-        // wde.Tick();
-        // wde.Tick();
+        NODE::ACTION_CustomAction1<float, int> ac{
+            b3.makeGetter(),
+            b1.makeSetter(),
+            asdfadsf.makeTickDel()};
 
-        NODE::CONTROL_IfThenElse<3> ite;
-        ite.addChild(&succ1);
-        ite.addChild(&runn1);
-        ite.addChild(&fail1);
-
-        ite.Tick();
-        ite.Tick();
-        runn1.setStatus(NodeStatus::FAILURE);
-        ite.Tick();
-        ite.Tick();
-        ite.Tick();
+        ac.Tick();
+        printf("new b1 : %d\n", b1.get());
+        ac.Tick();
 
         return;
     }

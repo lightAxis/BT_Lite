@@ -16,6 +16,7 @@ namespace BT_TEST
             float get() const override { return paramServer.get_b3(); }
             void set(const float &v) override { paramServer.set_b3(v); }
             Param getParamType() const override { return Param::b3__float; }
+            char *getName() const override { return Cvt::getParamName(getParamType()); }
 
             delegate<float(void)> makeGetter() const override
             {
