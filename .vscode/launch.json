@@ -5,7 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++ - 활성 파일 빌드 및 디버그",
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}/generator",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "g++ c++",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/test",

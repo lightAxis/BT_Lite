@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="RootTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="RootTree">
+        <Fallback>
+            <Condition ID="CustomCondition1"/>
+            <Action ID="CustomAction1" key1="4__uint8"/>
+            <IfThenElse>
+                <Condition ID="CustomCondition2"/>
+                <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
+                <AlwaysFailure/>
+            </IfThenElse>
+        </Fallback>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="CustomAction1">
+            <input_port default="4__uint8" name="key1">nownow</input_port>
+        </Action>
+        <Action ID="CustomAction2">
+            <input_port default="5__int" name="key1"/>
+            <output_port default="{b1__int}" name="key2"/>
+        </Action>
+        <Condition ID="CustomCondition1"/>
+        <Condition ID="CustomCondition2"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
