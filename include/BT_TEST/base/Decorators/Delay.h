@@ -19,6 +19,7 @@ namespace BT_TEST
             {
                 printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 assert(0); // Delay node is not implemented
+                return NodeStatus::FAILURE;
             }
 
             void Reset() override {}

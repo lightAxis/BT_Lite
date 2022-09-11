@@ -20,7 +20,7 @@ namespace BT_TEST
         class NodeBase
         {
         public:
-            NodeBase() : _uid(makeUID()), _status(NodeStatus::IDLE) {}
+            NodeBase() : _status(NodeStatus::IDLE), _uid(makeUID()) {}
             virtual ~NodeBase() = default;
 
             uint16_t getUID() { return _uid; }
@@ -35,7 +35,7 @@ namespace BT_TEST
 
         protected:
             NodeStatus _status;
-            const uint16_t _uid;
+            uint16_t _uid{0};
         };
 
         class ActionBase : public NodeBase

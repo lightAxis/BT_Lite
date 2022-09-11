@@ -22,9 +22,9 @@ namespace BT_TEST
                 if (result == NodeStatus::SUCCESS)
                     result = NodeStatus::FAILURE;
                 else if (result == NodeStatus::FAILURE)
-                    result == NodeStatus::SUCCESS;
+                    result = NodeStatus::SUCCESS;
                 else
-                    result == NodeStatus::RUNNING;
+                    result = NodeStatus::RUNNING;
 
                 setStatus(result);
                 return getStatus();
