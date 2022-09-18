@@ -19,7 +19,7 @@ def Parse(MainSubTree: ETree.Element, SubTrees: List[SubTree_t], CustomNodes: Li
 
         if len(children) > 0:
             new_ParentChild: ParentChild_t = ParentChild_t()
-            new_ParentChild.ParentIdx = _uid - 1
+            new_ParentChild.ParentIdx = info.UID - 1
             new_ParentChild.ChildrenIdxs = list(
                 range(len(resultsTotalTree), len(resultsTotalTree)+len(children)))
             resultsParentChild.append(new_ParentChild)

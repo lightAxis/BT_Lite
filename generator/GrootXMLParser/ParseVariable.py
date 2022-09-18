@@ -27,7 +27,8 @@ def Parse(variableStr: str) -> Tuple[str, str, bool]:
     _type = _type.replace('}', '')
     _typedef_idx = _type.find('__')
     if (_typedef_idx == -1):
-        raise NameError("Cannot convert Nodeparam, no typedef indicator")
+        raise NameError(
+            "Cannot convert Nodeparam, no typedef indicator : " + variableStr)
     TypeName = _type[_typedef_idx+2:]
     # parse Inputval
     InputValName = _type[:_typedef_idx]

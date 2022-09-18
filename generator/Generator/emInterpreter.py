@@ -13,4 +13,5 @@ def Generate(templatePath: str, outputPath: str, em_globals: Dict) -> None:
     interpreter.file(open(templatePath))
     interpreter.shutdown()
     ofile.close()
+    print("generating.. "+outputPath)
     pass

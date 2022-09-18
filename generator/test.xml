@@ -4,7 +4,7 @@
     <BehaviorTree ID="RootTree">
         <Fallback>
             <Condition ID="CustomCondition1"/>
-            <Action ID="CustomAction1" key1="4__uint8_t"/>
+            <Action ID="CustomAction1" key1="5__float"/>
             <SubTree ID="subtree1"/>
         </Fallback>
     </BehaviorTree>
@@ -13,7 +13,7 @@
         <IfThenElse>
             <Condition ID="CustomCondition2"/>
             <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
-            <Parallel failure_threshold="1__int" success_threshold="{b1__int}">
+            <Parallel failure_threshold="1__uint8_t" success_threshold="{b2__uint8_t}">
                 <AlwaysSuccess/>
                 <AlwaysSuccess/>
                 <Action ID="CustomAction1" key1="4__uint8_t"/>

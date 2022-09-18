@@ -43,6 +43,7 @@ class Generator:
 
         GenBase.Generate(self._GenerationIngredient)
 
+        GenCustoms.Generate(self._GenerationIngredient)
         pass
 
     def __makeBTDirectory(self, CodeGenPath: str) -> None:
