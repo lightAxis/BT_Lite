@@ -41,6 +41,8 @@ class Generator:
 
         GenCommon.Generate(self._GenerationIngredient)
 
+        GenBase.Generate(self._GenerationIngredient)
+
         pass
 
     def __makeBTDirectory(self, CodeGenPath: str) -> None:
