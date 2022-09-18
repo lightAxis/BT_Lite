@@ -4,13 +4,22 @@
     <BehaviorTree ID="RootTree">
         <Fallback>
             <Condition ID="CustomCondition1"/>
-            <Action ID="CustomAction1" key1="4__uint8"/>
-            <IfThenElse>
-                <Condition ID="CustomCondition2"/>
-                <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
-                <AlwaysFailure/>
-            </IfThenElse>
+            <Action ID="CustomAction1" key1="4__uint8_t"/>
+            <SubTree ID="subtree1"/>
         </Fallback>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="subtree1">
+        <IfThenElse>
+            <Condition ID="CustomCondition2"/>
+            <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
+            <Parallel failure_threshold="1__int" success_threshold="{b1__int}">
+                <AlwaysSuccess/>
+                <AlwaysSuccess/>
+                <Action ID="CustomAction1" key1="4__uint8_t"/>
+            </Parallel>
+            <AlwaysFailure/>
+        </IfThenElse>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
@@ -23,6 +32,8 @@
         </Action>
         <Condition ID="CustomCondition1"/>
         <Condition ID="CustomCondition2"/>
+        <SubTree ID="subtree1"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>
+
