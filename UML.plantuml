@@ -1,0 +1,268 @@
+@startuml test
+
+set NamespaceSeparator ::
+skinparam groupInheritance 2
+
+package BT_TEST {
+
+    package Cvt{
+        class methods<<static>>{
+            + getNodeStatusName(NodeStatus) : char*
+            + getNodeTypeName(NodeType) : char*
+
+            + getActionName(Action) : char*
+            + getConditionName(Condition) : char*
+            + getControlName(Control) : char*
+            + getDecoratorName(Decorator) : char*
+            + getSubTreeName(SubTree) : char*
+
+            + getParamName(Param) : char*
+        }
+    }
+
+    package Enums{
+    enum NodeStatus
+    enum NodeType
+    enum Action
+    enum Condition
+    enum Control
+    enum Decorator
+    enum SubTree
+    enum Param
+    }
+
+
+
+    package NODE{
+        class NodeBase{
+            __ public __
+            + NodeBase()
+            + {abstract} ~NodeBase()
+
+            + getUID() : uint16_t
+            + getStatus() : NodeStatus
+            + setStatus(NodeStatus) : void
+            .. virtual ..
+            + {abstract} getType() : NodeType <<const>><<pure>>
+            + {abstract} getName() : char * <<const>><<pure>>
+            + {abstract} Tick() : NodeStatus <<pure>>
+            + {abstract} Reset() : void <<pure>>
+            __ protected __
+            # _status : NodeStatus
+            # _uid{0} : uint16_t
+        }
+
+        class ActionBase extends NodeBase
+        {
+            __ public __
+            + ActionBase() : NodeBase()
+            + {abstract} ~ActionBase()
+            .. override ..
+            + getType() : NodeType <<const>>
+            .. virtual ..
+            + {abstract} getActionType() : Action <<const>><<pure>>
+        }
+
+        class ACTION_Custom extends ActionBase{
+            __ public __
+            + ACTION_Custom() : ActionBase()
+            + {abstract} ~ACTION_Custom()
+            .. override ..
+            + getActionType() : Action
+            + getName() : char*
+            + Tick() : NodeStatus
+            + Reset() : void
+        }
+
+        class ConditionBase extends NodeBase
+        {
+            __ public __
+            + ConditionBase() : NodeBase()
+            + {abstract} ~ConditionBase()
+            .. override ..
+            + getType() : NodeType <<const>>
+            .. virtual ..
+            + {abstract} getConditionType() : Condition <<const>><<pure>>
+        }
+
+        class CONDITION_Custom extends ConditionBase{
+            __ public __
+            + CONDITION_Custom() : ConditionBase
+            + {abstract} ~CONDITION_Custom()
+            .. override ..
+            + getActionType() : Action <<const>>
+            + getName() : char* <<const>>
+            + Tick() : NodeStatus
+            + Reset() : void
+        }
+
+        class ControlBase<uint8_t ChildN> extends NodeBase{
+            __ public __
+            + ControlBase() : NodeBase()
+            + {abstract} ~ControlBase()
+
+            + addChild(NodeBase*) : bool
+            .. override ..
+            + getType() : NodeType <<const>>
+            .. virtual ..
+            + {abstract} getControlType() : Control <<pure>>
+            __ protected __
+            # _children[ChildN] : NodeBase*
+            # _child_num : uint8_t
+        }
+
+
+        class CONTROL_Custom<uint8_t ChildN> extends ControlBase{
+            __ public __
+            + CONTROL_Custom() : ControlBase<ChildN>()
+            + {abstract} ~CONTROL_Custom()
+            .. override ..
+            + getActionType() : Action <<const>>
+            + getName() : char* <<const>>
+            + Tick() : NodeStatus
+            + Reset() : void
+        }
+
+        class DecoratorBase extends NodeBase
+        {
+            __ public __
+            + DecoratorBase() : NodeBase()
+            + {abstract} ~DecoratorBase()
+
+            + addChild(NodeBase*) : bool
+            .. override ..
+            + getType() : NodeType <<const>>
+            .. virtual ..
+            + {abstract} getDecoratorType() : Decorator <<const>><<pure>>
+            __ protected __
+            # _child : NodeBase*
+        }
+
+        class DECORATOR_Custom extends DecoratorBase{
+            __ public __
+            + DECORATOR_Custom() : DecoratorBase()
+            + {abstract} ~DECORATOR_Custom()
+            .. override ..
+            + getActionType() : Action <<const>>
+            + getName() : char* <<const>>
+            + Tick() : NodeStatus
+            + Reset() : void
+        }
+
+        class SubTreeBase extends NodeBase
+        {
+            __ public __
+            + SubTreeBase() : NodeBase()
+            + {abstract} ~SubTreeBase()
+
+            + addChild(NodeBase*) : bool
+            .. override ..
+            + getType() : NodeType <<const>>
+            .. virtual ..
+            getSubTreeType() : SubTree <<const>><<pure>>
+            __ protected __
+            # _child : NodeBase*
+        }
+
+        class SUBTREE_Custom extends SubTreeBase{
+            __ public __
+            + SUBTREE_Custom() : SubTreeBase()
+            + {abstract} ~SUBTREE_Custom()
+            .. override ..
+            + getActionType() : Action <<const>>
+            + getName() : char* <<const>>
+            + Tick() : NodeStatus
+            + Reset() : void
+        }
+
+    }
+
+
+    namespace PARAM{
+        class ParamBase<typename T>{
+            __ public __
+            + ParamBase()
+            + {abstract} ~ParamBase()
+            .. virtual ..
+            # {abstract} get() : T <<const>><<pure>>
+            # {abstract} set(const T&) : void <<pure>>
+
+            # {abstract} getParamType() : Param <<const>><<pure>>
+            # {abstract} getName() : char* <<const>><<pure>>
+
+            # {abstract} makeGetter() : delegate<T(void)> <<const>><<pure>>
+            # {abstract} makeSetter() : delegate<void(const T&) <<pure>>
+        }
+
+        PARAM_Custom --> ParamServer
+        class PARAM_Custom extends ParamBase{
+            __ public __
+            + PARAM_Custom() : ParamBase<T>()
+            + {abstract} ~PARAM_Custom()
+            .. override ..
+            + get() : T <<const>>
+            + set(const T&) : void
+
+            + getParamName() : Param <<const>>
+            + getName() : char* <<const>>
+
+            + makeGetter() : delegate<T(void)> <<const>>
+            + makeSetter() : delegate<void(const T&)>
+        }
+
+        class ParamServer<<static>>{
+            __ public__
+            + get_custom1() : T1
+            + get_custom2() : T2
+            + set_custom1(const T1&) : void
+            + set_custom2(const T1&) : void
+            __ private __
+            - _custom1 : T1
+            - _custom2 : T2
+        }
+    }
+
+
+    class Tree{
+        __ public __
+        + set_CustomAction1_TickDel(NODE::CustomAction1::TickDel) : void
+        + set_CustomAction2_TickDel(NODE::CustomAction1::TickDel) : void
+        + test() : bool
+        + build() : void
+        + Tick() : NodeStatus
+        __ private __
+        .. Params ..
+        - _PARAM_custom1 : PARAM::PARAM_Custom1
+        - _PARAM_custom2 : PARAM::PARAM_Custom2
+        - _PARAM_const_float_1{2.3f} : PARAM::PARAM_const_float_1
+        .. Node Tick Delegates ..
+        - _CustomAction1_TickDel : NODE::CustomAction1::TickDel
+        - _CustomAction2_TickDel : NODE::CustomAction2::TickDel
+        - _CustomAction1_TickDelPtr : NODE::CustomAction1::TickDel*
+        - _CustomAction2_TickDelPtr : NODE::CustomAction2::TickDel*
+        .. Nodes ..
+        - _SUBTREE_RootTree_1 : NODE::SUBTREE_RootTree
+        - _CONTROL_Sequence_2 : NODE::CONTROL_Sequence<4>
+        - _ACTION_AlwaysSuccess_3 : NODE::ACTION_AlwaysSuccess
+        - _CustomAction1_4 : NODE::ACTION_CustomAction1
+        - _CustomAction2_5 : NODE::ACTION_CustomAction2
+        - _CONTROL_Fallback_6 : NODE::CONTROL_Fallback<2>
+        - _DECORATOR_Inverter_7 : NODE::DECORATOR_Inverter
+        - _ACTION_AlwaySuccess_8 : NODE::ACTION_AlwaysSuccess
+        - _CustomAction1_9 : NODE::ACTION_CustomAction1
+    }
+}
+
+class delegate
+
+main --> delegate
+main --> Tree
+class main{
+
+}
+
+Tree --> PARAM
+Tree --> NODE
+NODE --> PARAM
+
+@enduml
