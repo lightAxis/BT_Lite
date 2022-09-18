@@ -1,1 +1,4 @@
 build/
+test_gen/
+__pycache__/
+*.py[cod]
