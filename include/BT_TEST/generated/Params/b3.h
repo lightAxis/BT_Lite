@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../NodeBase.h"
+#include "../../ParamBase.h"
 #include "../ParamServer_gen.h"
 
 namespace BT_TEST

@@ -1,0 +1,49 @@
+@startjson LoggerJSON
+#highlight "structName"
+#highlight "nodes" / "0" / "structName"
+#highlight "nodes" / "0" / "port_remaps" / "0" / "structName"
+#highlight "node_models" / "0" / "structName"
+#highlight "node_models" / "0" / "ports" / "0" / "structName"
+{
+    "structName" : "table BehaviorTree",
+    "root_uid" : "uint16_t",
+    "nodes" : 
+    [
+        {
+            "structName" : "table TreeNode",
+            "uid" : "uint16_t",
+            "children_uid" : "[uint16_t]",
+            "status" : "NodeStatus",
+            "instance_name" : "string",
+            "registration_name" : "string",
+            "port_remaps" : 
+            [
+                {
+                    "structName" : "table PortModel",
+                    "port_name" : "PortDirection",
+                    "type_info" : "string",
+                    "description" : "string"
+                }
+            ]
+        }
+    ],
+    "node_models" : 
+    [
+        {
+            "structName" : "table NodeModel",
+            "registraction_name" : "string",
+            "type" : "NodeType",
+            "ports" : 
+            [
+                {
+                    "structName" : "table PortModel",
+                    "port_name" : "string",
+                    "direction" : "PortDirection",
+                    "type_info" : "string",
+                    "description" : "string"
+                }
+            ]
+        }
+    ]
+}
+@endjson

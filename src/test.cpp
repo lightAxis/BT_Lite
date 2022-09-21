@@ -56,7 +56,14 @@ int main(int argc, char **argv)
 
     BT_TEST::RootTree.build();
 
-    BT_TEST::RootTree.Tick();
-
+    BT_TEST::StatusChangeLog_t *logs;
+    int logCount = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        BT_TEST::logger.clearLogs();
+        BT_TEST::RootTree.Tick();
+        BT_TEST::logger.getLogs();
+        logCount = BT_TEST::logger.getLogSize();
+    }
     return 0;
 }

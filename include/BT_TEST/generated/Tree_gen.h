@@ -9,14 +9,13 @@ namespace BT_TEST
     class Tree
     {
     public:
-        void set_CustomAction1_tickDel(NODE::ACTION_CustomAction1::_tickDel del) { _CustomAction1_tickDel = del; }
+        void set_CustomAction1_tickDel(NODE::ACTION_CustomAction1::TickDel del) { _CustomAction1_tickDel = del; }
         void set_CustomAction2_tickDel(NODE::ACTION_CustomAction2::_tickDel del) { _CustomAction2_tickDel = del; }
 
         bool test()
         {
-            if (_CustomAction1_tickDel == nullptr)
-                return false;
-            else if (_CustomAction2_tickDel == nullptr)
+            if (_CustomAction1_tickDel == nullptr ||
+                _CustomAction2_tickDel == nullptr)
                 return false;
             return true;
         }
@@ -31,12 +30,12 @@ namespace BT_TEST
             _PARAM_b4__float.set(6.7);
 
             _SUBTREE_RootTree_1.addChild(&_CONTROL_Sequence_2);
-            _CONTROL_Sequence_2.addChild(&_ACTION_AlwaysSuccess);
+            _CONTROL_Sequence_2.addChild(&_ACTION_AlwaysSuccess_3);
             _CONTROL_Sequence_2.addChild(&_CustomAction1_4);
             _CONTROL_Sequence_2.addChild(&_CustomAction2_5);
             _CONTROL_Sequence_2.addChild(&_CONTROL_Fallback_6);
             _CONTROL_Fallback_6.addChild(&_DECORATOR_Inverter_7);
-            _CONTROL_Fallback_6.addChild(&_ACTION_AlwaysSuccess);
+            _CONTROL_Fallback_6.addChild(&_ACTION_AlwaysSuccess_8);
             _DECORATOR_Inverter_7.addChild(&_CustomAction1_9);
         }
 
@@ -57,26 +56,22 @@ namespace BT_TEST
         PARAM::PARAM_b4 _PARAM_b4__float;
 
         // Nodes Tick Delegates
-        NODE::ACTION_CustomAction1::_tickDel _CustomAction1_tickDel{nullptr};
+        NODE::ACTION_CustomAction1::TickDel _CustomAction1_tickDel{nullptr};
         NODE::ACTION_CustomAction2::_tickDel _CustomAction2_tickDel{nullptr};
 
         // Nodes Tick Delegates Ptr
-        NODE::ACTION_CustomAction1::_tickDel *_CustomAction1_tickDelPtr{&_CustomAction1_tickDel};
+        NODE::ACTION_CustomAction1::TickDel *_CustomAction1_tickDelPtr{&_CustomAction1_tickDel};
         NODE::ACTION_CustomAction2::_tickDel *_CustomAction2_tickDelPtr{&_CustomAction2_tickDel};
-
-        // Nodes Singleton
-        NODE::ACTION_AlwaysFailure _ACTION_AlwaysFailure{};
-        NODE::ACTION_AlwaysSuccess _ACTION_AlwaysSuccess{};
 
         // Nodes Variable
         NODE::SUBTREE_RootTree _SUBTREE_RootTree_1{};
         NODE::CONTROL_Sequence<4> _CONTROL_Sequence_2{};
-        // NODE::ACTION_AlwaysSuccess _ACTION_AlwaysSuccess_3{};
+        NODE::ACTION_AlwaysSuccess _ACTION_AlwaysSuccess_3{};
         NODE::ACTION_CustomAction1 _CustomAction1_4{_PARAM_Const_float_1.makeGetter(), _PARAM_b1__int.makeSetter(), _CustomAction1_tickDelPtr};
         NODE::ACTION_CustomAction2 _CustomAction2_5{_PARAM_b3__float.makeGetter(), _PARAM_b4__float.makeSetter(), _CustomAction2_tickDelPtr};
         NODE::CONTROL_Fallback<2> _CONTROL_Fallback_6{};
         NODE::DECORATOR_Inverter _DECORATOR_Inverter_7{};
-        // NODE::ACTION_AlwaysSuccess _ACTION_AlwaySuccess_8{};
+        NODE::ACTION_AlwaysSuccess _ACTION_AlwaysSuccess_8{};
         NODE::ACTION_CustomAction1 _CustomAction1_9{_PARAM_b4__float.makeGetter(), _PARAM_b2__int.makeSetter(), _CustomAction1_tickDelPtr};
     };
 }

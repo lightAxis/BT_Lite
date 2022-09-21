@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="RootTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="RootTree">
+        <Fallback>
+            <Inverter>
+                <Condition ID="CustomCondition1"/>
+            </Inverter>
+            <Inverter>
+                <Action ID="CustomAction1" key1="5__uint8_t"/>
+            </Inverter>
+            <SubTree ID="subtree1"/>
+            <SubTree ID="subtree2"/>
+        </Fallback>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="subtree1">
+        <ForceFailure>
+            <IfThenElse>
+                <Condition ID="CustomCondition2"/>
+                <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
+                <Parallel failure_threshold="1__uint8_t" success_threshold="{b2__uint8_t}">
+                    <AlwaysSuccess/>
+                    <AlwaysSuccess/>
+                    <Action ID="CustomAction1" key1="4__uint8_t"/>
+                    <SubTree ID="subtree2"/>
+                </Parallel>
+            </IfThenElse>
+        </ForceFailure>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="subtree2">
+        <Sequence>
+            <ForceSuccess>
+                <Action ID="CustomAction1" key1="4__uint8_t"/>
+            </ForceSuccess>
+            <Action ID="CustomAction1" key1="4__uint8_t"/>
+            <Action ID="CustomAction2" key1="8__int" key2="{b3__int}"/>
+            <AlwaysSuccess/>
+            <AlwaysSuccess/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="CustomAction1">
+            <input_port default="4__uint8_t" name="key1">nownow</input_port>
+        </Action>
+        <Action ID="CustomAction2">
+            <input_port default="5__int" name="key1"/>
+            <output_port default="{b1__int}" name="key2"/>
+        </Action>
+        <Condition ID="CustomCondition1"/>
+        <Condition ID="CustomCondition2"/>
+        <SubTree ID="subtree1"/>
+        <SubTree ID="subtree2"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+

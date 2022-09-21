@@ -20,17 +20,13 @@ namespace BT_TEST
             Action getActionType() const override { return Action::CustomAction2; }
             char *getName() const override { return Cvt::getActionName(getActionType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), getUID());
                 float temp;
                 NodeStatus result = (*_tick_del)(_b1_get(), &temp, this);
                 _b2_set(temp);
-                setStatus(result);
-                return getStatus();
+                return result;
             }
-
-            void Reset() override {}
 
         private:
             _getter _b1_get;

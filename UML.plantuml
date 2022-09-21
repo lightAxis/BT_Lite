@@ -31,9 +31,36 @@ package BT_TEST {
     enum Param
     }
 
+    package LOG{
+        struct StatusChangeLog_t <<Union>>{
+        + data : uint16_t
+        ---
+        <<bitfield>>
+        + uid : uint16_t : 12
+        + prev_status : uint8_t : 2
+        + status : uint8_t : 2
+        }
 
+        class Logger<int TotalNodeNum><<static>>{
+            __ public __
+            + Logger()
+            + ~Logger()
+            
+            + getLogs() : StatusChangeLog_t*
+            + clearLogs() : void
+            + addLog(const uint16_t&, const uint8_t&, const uint8_t&) : void
+            + getLogSize() : int
+            __ private __
+            - _logs : StatusChangeLog_t*
+            - _log_idx : uint16_t
+        }
+
+    }
+    
 
     package NODE{
+        
+
         class NodeBase{
             __ public __
             + NodeBase()
@@ -42,11 +69,13 @@ package BT_TEST {
             + getUID() : uint16_t
             + getStatus() : NodeStatus
             + setStatus(NodeStatus) : void
+            + Tick() : NodeStatus
+            + Reset() : void
             .. virtual ..
             + {abstract} getType() : NodeType <<const>><<pure>>
             + {abstract} getName() : char * <<const>><<pure>>
-            + {abstract} Tick() : NodeStatus <<pure>>
-            + {abstract} Reset() : void <<pure>>
+            + {abstract} ResetChildren() : void <<pure>>
+            + {abstract} TickContent() : NodeStatus <<pure>>
             __ protected __
             # _status : NodeStatus
             # _uid{0} : uint16_t
@@ -59,6 +88,7 @@ package BT_TEST {
             + {abstract} ~ActionBase()
             .. override ..
             + getType() : NodeType <<const>>
+            + ResetChildren() : void
             .. virtual ..
             + {abstract} getActionType() : Action <<const>><<pure>>
         }
@@ -70,8 +100,7 @@ package BT_TEST {
             .. override ..
             + getActionType() : Action
             + getName() : char*
-            + Tick() : NodeStatus
-            + Reset() : void
+            + TickContent() : NodeStatus
         }
 
         class ConditionBase extends NodeBase
@@ -81,6 +110,7 @@ package BT_TEST {
             + {abstract} ~ConditionBase()
             .. override ..
             + getType() : NodeType <<const>>
+            + ResetChildren() : void
             .. virtual ..
             + {abstract} getConditionType() : Condition <<const>><<pure>>
         }
@@ -92,8 +122,7 @@ package BT_TEST {
             .. override ..
             + getActionType() : Action <<const>>
             + getName() : char* <<const>>
-            + Tick() : NodeStatus
-            + Reset() : void
+            + TickContent() : NodeStatus
         }
 
         class ControlBase<uint8_t ChildN> extends NodeBase{
@@ -104,6 +133,7 @@ package BT_TEST {
             + addChild(NodeBase*) : bool
             .. override ..
             + getType() : NodeType <<const>>
+            + ResetChildren() : void
             .. virtual ..
             + {abstract} getControlType() : Control <<pure>>
             __ protected __
@@ -119,8 +149,7 @@ package BT_TEST {
             .. override ..
             + getActionType() : Action <<const>>
             + getName() : char* <<const>>
-            + Tick() : NodeStatus
-            + Reset() : void
+            + TickContent() : NodeStatus
         }
 
         class DecoratorBase extends NodeBase
@@ -132,6 +161,7 @@ package BT_TEST {
             + addChild(NodeBase*) : bool
             .. override ..
             + getType() : NodeType <<const>>
+            + ResetChildren() : void
             .. virtual ..
             + {abstract} getDecoratorType() : Decorator <<const>><<pure>>
             __ protected __
@@ -145,8 +175,7 @@ package BT_TEST {
             .. override ..
             + getActionType() : Action <<const>>
             + getName() : char* <<const>>
-            + Tick() : NodeStatus
-            + Reset() : void
+            + TickContent() : NodeStatus
         }
 
         class SubTreeBase extends NodeBase
@@ -158,6 +187,7 @@ package BT_TEST {
             + addChild(NodeBase*) : bool
             .. override ..
             + getType() : NodeType <<const>>
+            + ResetChildren() : void
             .. virtual ..
             getSubTreeType() : SubTree <<const>><<pure>>
             __ protected __
@@ -171,8 +201,7 @@ package BT_TEST {
             .. override ..
             + getActionType() : Action <<const>>
             + getName() : char* <<const>>
-            + Tick() : NodeStatus
-            + Reset() : void
+            + TickContent() : NodeStatus
         }
 
     }
@@ -261,8 +290,9 @@ class main{
 
 }
 
+NODE --> LOG
+
 Tree --> PARAM
 Tree --> NODE
-NODE --> PARAM
 
 @enduml

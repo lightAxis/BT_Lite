@@ -18,9 +18,8 @@ namespace BT_TEST
             Decorator getDecoratorType() const override { return Decorator::RetryUntilSuccessful; }
             char *getName() const override { return Cvt::getDecoratorName(getDecoratorType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 uint8_t repeatNum = _repeat_get();
                 NodeStatus result;
 
@@ -29,16 +28,12 @@ namespace BT_TEST
                     result = _child->Tick();
                     if (result == NodeStatus::SUCCESS)
                     {
-                        setStatus(result);
-                        return getStatus();
+                        return result;
                         break;
                     }
                 }
-                setStatus(NodeStatus::FAILURE);
-                return getStatus();
+                return NodeStatus::FAILURE;
             }
-
-            void Reset() override {}
 
         private:
             repeat_getter _repeat_get;
