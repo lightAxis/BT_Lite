@@ -1,0 +1,78 @@
+@startuml BT_Lite_Headers
+
+set NamespaceSeparator ::
+skinparam componentStyle rectangle
+
+component Copy_At_CompileTime #LawnGreen
+component AutoGen_At_CompileTime #SkyBlue
+
+package Enums{
+    component Enums.h #LawnGreen
+    component Enums_gen.h #SkyBlue
+    component Enums_base.h #LawnGreen
+
+    Enums.h ..> Enums_gen.h 
+    Enums.h ..> Enums_base.h
+}
+
+package Node{
+    component Nodes.h #LawnGreen
+    component Nodes_gen.h #SkyBlue
+    component Nodes_base.h #LawnGreen
+    
+    component NodeBase.h #LawnGreen
+    component AllBaseNodes.h #LawnGreen
+    component AllCustomNodes.h #SkyBlue
+
+    Nodes.h ..>Nodes_gen.h
+    Nodes_gen.h ..> AllCustomNodes.h
+    AllCustomNodes.h ..> NodeBase.h
+
+    Nodes.h ..>Nodes_base.h
+    Nodes_base.h ..> AllBaseNodes.h
+    AllBaseNodes.h ..> NodeBase.h
+
+    note left of NodeBase.h : Delegate.h
+}
+
+package Param{
+    component Params.h #LawnGreen
+    component Params_base.h #LawnGreen
+    component Params_gen.h #SkyBlue
+    component ParamBase.h #LawnGreen
+    component ParamServer_gen.h #SkyBlue
+
+    component AllParamConst.h #LawnGreen
+    component AllParamGenerated.h #SkyBlue
+
+    Params.h ..> Params_base.h
+    Params_base.h ..> AllParamConst.h
+    AllParamConst.h ..> ParamBase.h
+
+    Params.h ..> Params_gen.h
+    Params_gen.h ..> AllParamGenerated.h
+    AllParamGenerated.h ..> ParamServer_gen.h
+    AllParamGenerated.h ..> ParamBase.h
+
+    note left of ParamBase.h : Delegate.h
+}
+
+component Delegate.h #LawnGreen
+component Logger.h #LawnGreen
+
+NodeBase.h ..> Logger.h
+NodeBase.h ..> Enums : Enums.h
+
+component Tree_gen.h #LawnGreen
+Tree_gen.h ..> Enums : Enums.h
+Tree_gen.h ..> Node : Nodes.h
+Tree_gen.h ..> Param : Params.h
+
+component BT_NAME.h #LawnGreen
+BT_NAME.h ..> Tree_gen.h
+
+component USER_MAIN.h
+USER_MAIN.h ..> BT_NAME.h
+USER_MAIN.h ..> Delegate.h
+
+@enduml
