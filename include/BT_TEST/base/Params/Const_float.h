@@ -10,17 +10,10 @@ namespace BT_TEST
         {
         public:
             PARAM_Const_float() = delete;
-            PARAM_Const_float(const float &v) : ParamBase<float>(), _internal(v)
-            {
-                float aa = _internal;
-                _a = aa;
-            }
+            PARAM_Const_float(const float &v) : ParamBase<float>(), _internal(v) {}
             virtual ~PARAM_Const_float() = default;
 
-            float get() const override
-            {
-                return _a;
-            }
+            float get() const override { return _internal; }
             void set(const float &v) override { assert(0); } // PARAM_const cannot be set
             Param getParamType() const override { return Param::Const; }
             char *getName() const override { return Cvt::getParamName(getParamType()); }

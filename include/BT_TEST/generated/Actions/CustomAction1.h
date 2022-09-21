@@ -8,34 +8,30 @@ namespace BT_TEST
     {
         class ACTION_CustomAction1 : public ActionBase
         {
-            typedef delegate<float(void)> _getter;
-            typedef delegate<void(const int &)> _setter;
+            typedef delegate<float(void)> _getter_b1;
+            typedef delegate<void(const int &)> _setter_b2;
 
         public:
-            typedef delegate<NodeStatus(const float &, int *, NodeBase *)> _tickDel;
-            ACTION_CustomAction1(_getter b1, _setter b2, _tickDel *tickDel) : ActionBase(),
-                                                                              _b1_get(b1), _b2_set(b2), _tick_del(tickDel) {}
+            typedef delegate<NodeStatus(const float &, int *, NodeBase *)> TickDel;
+            ACTION_CustomAction1(_getter_b1 b1, _setter_b2 b2, TickDel *tickDel) : ActionBase(),
+                                                                                   _get_b1(b1), _set_b2(b2), _tickDel(tickDel) {}
             virtual ~ACTION_CustomAction1() = default;
 
             Action getActionType() const override { return Action::CustomAction1; }
             char *getName() const override { return Cvt::getActionName(getActionType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), getUID());
                 int temp;
-                NodeStatus result = (*_tick_del)(_b1_get(), &temp, this);
-                _b2_set(temp);
-                setStatus(result);
-                return getStatus();
+                NodeStatus result = (*_tickDel)(_get_b1(), &temp, this);
+                _set_b2(temp);
+                return result;
             }
 
-            void Reset() override {}
-
         private:
-            _getter _b1_get;
-            _setter _b2_set;
-            _tickDel *_tick_del;
+            _getter_b1 _get_b1;
+            _setter_b2 _set_b2;
+            TickDel *_tickDel;
         };
     }
 }

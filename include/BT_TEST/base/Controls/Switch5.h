@@ -28,9 +28,8 @@ namespace BT_TEST
             Control getControlType() const override { return Control::Switch5; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 uint8_t child_idx = 5;
                 for (uint8_t i = 0; i < 5; i++)
                 {
@@ -41,10 +40,8 @@ namespace BT_TEST
                     }
                 }
                 NodeStatus result = this->_children[child_idx]->Tick();
-                this->setStatus(result);
-                return this->getStatus();
+                return result;
             }
-            void Reset() override {}
 
         private:
             case_getter _case_gets[5];

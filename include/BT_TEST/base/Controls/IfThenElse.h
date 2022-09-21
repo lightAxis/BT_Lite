@@ -19,9 +19,8 @@ namespace BT_TEST
             Control getControlType() const override { return Control::IfThenElse; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d\n", getName(), this->getUID());
                 NodeStatus result{NodeStatus::IDLE};
                 if (!_isRunningReactive)
                 {
@@ -33,8 +32,7 @@ namespace BT_TEST
                         _child_to_tick = 2;
                     else
                     {
-                        this->setStatus(NodeStatus::RUNNING);
-                        return this->getStatus();
+                        return NodeStatus::RUNNING;
                     }
                 }
 
@@ -44,11 +42,8 @@ namespace BT_TEST
                 else
                     _isRunningReactive = false;
 
-                this->setStatus(result);
-                return this->getStatus();
+                return result;
             }
-
-            void Reset() override {}
 
         private:
             uint8_t _child_to_tick = 0;

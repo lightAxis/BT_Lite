@@ -19,7 +19,7 @@ namespace BT_TEST
             Control getControlType() const override { return Control::WhildDoElse; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
                 printf("name:%s, uid:%d\n", getName(), this->getUID());
                 NodeStatus result = this->_children[0]->Tick();
@@ -30,15 +30,12 @@ namespace BT_TEST
                     _child_to_tick = 2;
                 else
                 {
-                    this->setStatus(NodeStatus::RUNNING);
-                    return this->getStatus();
+                    return NodeStatus::RUNNING;
                 }
 
                 result = this->_children[_child_to_tick]->Tick();
-                this->setStatus(result);
-                return this->getStatus();
+                return result;
             }
-            void Reset() override {}
 
         private:
         };

@@ -2,6 +2,7 @@
 
 #include "Enums.h"
 #include "Delegate.h"
+#include "Logger.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -25,15 +26,33 @@ namespace BT_TEST
 
             uint16_t getUID() { return _uid; }
             NodeStatus getStatus() { return _status; }
-            void setStatus(NodeStatus status) { _status = status; }
+            void setStatus(NodeStatus status)
+            {
+                logger.addLog(_uid, (uint8_t)(_status), (uint8_t)(status));
+                _status = status;
+            }
 
             virtual NodeType getType() const = 0;
             virtual char *getName() const = 0;
 
-            virtual NodeStatus Tick() = 0;
-            virtual void Reset() = 0;
+            void Reset() { setStatus(NodeStatus::IDLE); }
+            virtual void ResetChildren() = 0;
+            virtual NodeStatus TickContent() = 0;
 
-        protected:
+            NodeStatus Tick()
+            {
+                // printf("[NodeBase]-----");
+                // printf("name:%s, uid:%d Ticked\n", getName(), getUID());
+                setStatus(NodeStatus::RUNNING);
+                NodeStatus result = TickContent();
+                ResetChildren();
+                setStatus(result);
+                // printf("[NodeBase]-----");
+                // printf("name:%s, uid:%d finished:%s\n", getName(), getUID(), Cvt::getNodeStatusName(getStatus()));
+                return result;
+            }
+
+        private:
             NodeStatus _status;
             uint16_t _uid{0};
         };
@@ -46,6 +65,7 @@ namespace BT_TEST
             NodeType getType() const override { return NodeType::ACTION; }
 
             virtual Action getActionType() const = 0;
+            void ResetChildren() override {}
 
         protected:
         };
@@ -58,6 +78,7 @@ namespace BT_TEST
             NodeType getType() const override { return NodeType::CONDITION; }
 
             virtual Condition getConditionType() const = 0;
+            void ResetChildren() override {}
 
         protected:
         };
@@ -90,6 +111,12 @@ namespace BT_TEST
                 return true;
             }
 
+            void ResetChildren() override
+            {
+                for (uint8_t i = 0; i < _child_num; i++)
+                    _children[i]->Reset();
+            }
+
         protected:
             NodeBase *_children[ChildN];
             uint8_t _child_num;
@@ -115,6 +142,8 @@ namespace BT_TEST
                 return true;
             }
 
+            void ResetChildren() override { _child->Reset(); }
+
         protected:
             NodeBase *_child;
         };
@@ -138,6 +167,8 @@ namespace BT_TEST
                 _child = child;
                 return true;
             }
+
+            void ResetChildren() override { _child->Reset(); }
 
         protected:
             NodeBase *_child;

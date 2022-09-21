@@ -15,22 +15,17 @@ namespace BT_TEST
             Decorator getDecoratorType() const override { return Decorator::KeepRunningUntilFailure; }
             char *getName() const override { return Cvt::getDecoratorName(getDecoratorType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 NodeStatus result;
 
                 result = _child->Tick();
                 if (result != NodeStatus::FAILURE)
                 {
-                    setStatus(NodeStatus::RUNNING);
-                    return getStatus();
+                    return NodeStatus::RUNNING;
                 }
-                setStatus(NodeStatus::FAILURE);
-                return getStatus();
+                return NodeStatus::FAILURE;
             }
-
-            void Reset() override {}
 
         private:
         };

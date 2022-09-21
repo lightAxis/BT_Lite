@@ -9,7 +9,7 @@ namespace BT_TEST
     class Tree
     {
     public:
-        void set_CustomAction1_tickDel(NODE::ACTION_CustomAction1::_tickDel del) { _CustomAction1_tickDel = del; }
+        void set_CustomAction1_tickDel(NODE::ACTION_CustomAction1::TickDel del) { _CustomAction1_tickDel = del; }
         void set_CustomAction2_tickDel(NODE::ACTION_CustomAction2::_tickDel del) { _CustomAction2_tickDel = del; }
 
         bool test()
@@ -56,11 +56,11 @@ namespace BT_TEST
         PARAM::PARAM_b4 _PARAM_b4__float;
 
         // Nodes Tick Delegates
-        NODE::ACTION_CustomAction1::_tickDel _CustomAction1_tickDel{nullptr};
+        NODE::ACTION_CustomAction1::TickDel _CustomAction1_tickDel{nullptr};
         NODE::ACTION_CustomAction2::_tickDel _CustomAction2_tickDel{nullptr};
 
         // Nodes Tick Delegates Ptr
-        NODE::ACTION_CustomAction1::_tickDel *_CustomAction1_tickDelPtr{&_CustomAction1_tickDel};
+        NODE::ACTION_CustomAction1::TickDel *_CustomAction1_tickDelPtr{&_CustomAction1_tickDel};
         NODE::ACTION_CustomAction2::_tickDel *_CustomAction2_tickDelPtr{&_CustomAction2_tickDel};
 
         // Nodes Variable
