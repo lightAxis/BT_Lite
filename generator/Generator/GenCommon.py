@@ -11,13 +11,19 @@ from . import emInterpreter
 
 
 def Generate(input: GenerationIngredients_t) -> None:
+    """Generate common sources\n
+    - Enums.h
+    - NodeBase.h
+    - Nodes.h
+    - (NAMESPACE).h
+    - Delegate.h
+
+    Args:
+        input (GenerationIngredients_t): Parsed Results from GrootXMLParser module
+    """
 
     __generate(templatePath=os.path.join(input.templatePathBase, "Enums.h.em"),
                outputPath=os.path.join(input.outputPathBase, "Enums.h"),
-               BT_name=input.BT_Name)
-
-    __generate(templatePath=os.path.join(input.templatePathBase, "NodeBase.h.em"),
-               outputPath=os.path.join(input.outputPathBase, "NodeBase.h"),
                BT_name=input.BT_Name)
 
     __generate(templatePath=os.path.join(input.templatePathBase, "NodeBase.h.em"),

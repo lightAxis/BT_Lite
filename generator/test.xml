@@ -3,28 +3,47 @@
     <!-- ////////// -->
     <BehaviorTree ID="RootTree">
         <Fallback>
-            <Condition ID="CustomCondition1"/>
-            <Action ID="CustomAction1" key1="5__float"/>
+            <Inverter>
+                <Condition ID="CustomCondition1"/>
+            </Inverter>
+            <Inverter>
+                <Action ID="CustomAction1" key1="5__uint8_t"/>
+            </Inverter>
             <SubTree ID="subtree1"/>
+            <SubTree ID="subtree2"/>
         </Fallback>
     </BehaviorTree>
     <!-- ////////// -->
     <BehaviorTree ID="subtree1">
-        <IfThenElse>
-            <Condition ID="CustomCondition2"/>
-            <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
-            <Parallel failure_threshold="1__uint8_t" success_threshold="{b2__uint8_t}">
-                <AlwaysSuccess/>
-                <AlwaysSuccess/>
+        <ForceFailure>
+            <IfThenElse>
+                <Condition ID="CustomCondition2"/>
+                <Action ID="CustomAction2" key1="5__int" key2="{b1__int}"/>
+                <Parallel failure_threshold="1__uint8_t" success_threshold="{b2__uint8_t}">
+                    <AlwaysSuccess/>
+                    <AlwaysSuccess/>
+                    <Action ID="CustomAction1" key1="4__uint8_t"/>
+                    <SubTree ID="subtree2"/>
+                </Parallel>
+            </IfThenElse>
+        </ForceFailure>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="subtree2">
+        <Sequence>
+            <ForceSuccess>
                 <Action ID="CustomAction1" key1="4__uint8_t"/>
-            </Parallel>
-            <AlwaysFailure/>
-        </IfThenElse>
+            </ForceSuccess>
+            <Action ID="CustomAction1" key1="4__uint8_t"/>
+            <Action ID="CustomAction2" key1="8__int" key2="{b3__int}"/>
+            <AlwaysSuccess/>
+            <AlwaysSuccess/>
+        </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
         <Action ID="CustomAction1">
-            <input_port default="4__uint8" name="key1">nownow</input_port>
+            <input_port default="4__uint8_t" name="key1">nownow</input_port>
         </Action>
         <Action ID="CustomAction2">
             <input_port default="5__int" name="key1"/>
@@ -33,6 +52,7 @@
         <Condition ID="CustomCondition1"/>
         <Condition ID="CustomCondition2"/>
         <SubTree ID="subtree1"/>
+        <SubTree ID="subtree2"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>

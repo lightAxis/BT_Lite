@@ -1,3 +1,10 @@
+@# em globals
+@# 
+@# NAMESPACE: str
+@# className: str
+@# paramName: str
+@# paramType: str 
+@# 
 #pragma once
 
 #include "../../NodeBase.h"
@@ -7,31 +14,31 @@ namespace @(NAMESPACE)
 {
     namespace PARAM
     {
-        class PARAM_b1 : public ParamBase<int>
+
+        class @(className) : public ParamBase<@(paramType)>
         {
         public:
-            PARAM_b1() : ParamBase<int>() {}
-            virtual ~PARAM_b1() = default;
+            @(className)() : ParamBase<@(paramType)>() {}
+            virtual ~@(className)() = default;
 
-            int get() const override { return paramServer.get_b1(); }
-            void set(const int &v) override { paramServer.set_b1(v); }
-            Param getParamType() const override { return Param::b1__int; }
+            @(paramType) get() const override { return paramServer.get_@(paramName)(); }
+            void set(const @(paramType)& v) override { paramServer.set_@(paramName)(v); }
+            Param getParamType() const override { return Param::@(paramName); }
             char *getName() const override { return Cvt::getParamName(getParamType()); }
 
-            delegate<int(void)> makeGetter() const override
+            delegate<@(paramType)(void)> makeGetter() const override
             {
-                delegate<int(void)> del;
-                del.set<PARAM_b1, &PARAM_b1::get>(*this);
+                delegate<@(paramType)(void)> del;
+                del.set<@(className), &@(className)::get>(*this);
                 return del;
             }
 
-            delegate<void(const int &)> makeSetter() override
+            delegate<void(const @(paramType) &)> makeSetter() override
             {
-                delegate<void(const int &)> del;
-                del.set<PARAM_b1, &PARAM_b1::set>(*this);
+                delegate<void(const @(paramType) &)> del;
+                del.set<@(className), &@(className)::set>(*this);
                 return del;
             }
-
         protected:
         };
     }

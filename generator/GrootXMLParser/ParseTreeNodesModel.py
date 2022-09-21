@@ -5,6 +5,14 @@ from GrootXMLParser import ParseVariable
 
 
 def Parse(TreeNodeModel_nodes: ETree.Element) -> List[TreeNodesModel_t]:
+    """Parse tree node model infos from XML file made by Groot
+
+    Args:
+        TreeNodeModel_nodes (ETree.Element): TreeNodeModel xml element
+
+    Returns:
+        List[TreeNodesModel_t]: TreeNodeModel_nodes
+    """
     result: List[TreeNodesModel_t] = []
 
     for node in TreeNodeModel_nodes:

@@ -16,7 +16,7 @@ namespace @(NAMESPACE)
             }
             virtual ~CONTROL_WhileDoElse() = default;
 
-            Control getControlType() const override { return Control::WhildDoElse; }
+            Control getControlType() const override { return Control::WhileDoElse; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
             NodeStatus Tick() override

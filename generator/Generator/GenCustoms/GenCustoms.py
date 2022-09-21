@@ -7,7 +7,7 @@ from GrootXMLParser.EnumsStructs import *
 
 from Generator import emInterpreter
 
-from . import GenEnums, GenCommon
+from . import GenEnums, GenCommon, GenNodes, GenParams
 
 
 def Generate(input: GenerationIngredients_t) -> None:
@@ -16,6 +16,8 @@ def Generate(input: GenerationIngredients_t) -> None:
 
     GenCommon.Generate(input)
     GenEnums.Generate(input)
+    GenNodes.Generate(input)
+    GenParams.Generate(input)
     pass
 
 

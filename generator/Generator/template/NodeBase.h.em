@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <assert.h>
+#include <stdio.h>
 
 namespace @(NAMESPACE)
 {

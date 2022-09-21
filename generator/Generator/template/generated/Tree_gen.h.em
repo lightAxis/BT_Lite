@@ -66,10 +66,6 @@ if delLen >0:
         {
             assert(test()); // all TickDelegate function pointers must not nullptr when build a tree
 
-            //_PARAM_b1__int.set(2);
-            //_PARAM_b2__int.set(3);
-            //_PARAM_b3__float.set(3.4f);
-            //_PARAM_b4__float.set(6.7);
 @[for Str in BuildStr_List]@
             @(Str)
 @[end for]

@@ -10,6 +10,12 @@ from . import emInterpreter
 
 
 def Generate(input: GenerationIngredients_t) -> None:
+    """Generate Bases of BT\n
+    - base/...h
+
+    Args:
+        input (GenerationIngredients_t): Parsed Results from GrootXMLParser module
+    """
 
     __makeDir(input.outputPathBase)
 

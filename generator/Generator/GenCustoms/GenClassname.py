@@ -99,7 +99,7 @@ def MakeCustomNodeDelegateNames(customNode: TreeNodesModel_t) -> Tuple[str, str,
     nodeTypeStr: str = customNode.Tag.upper()
     nodeName: str = customNode.ID
 
-    className: str = nodeTypeStr+"_"+nodeName+"::_tickDel"
+    className: str = nodeTypeStr+"_"+nodeName+"::TickDel"
     variableName: str = "_"+nodeName+"_tickDel"
     initValue: str = "nullptr"
     return className, variableName, initValue

@@ -15,6 +15,9 @@ from .GenCustoms import GenCustoms
 
 
 class Generator:
+    """Generator for BT custom codes
+    """
+
     def __init__(self, GrootXmlResult: GrootXMLParser_out_t, BT_Name: str, CodeGenPath: str):
         self._ParsedGroot = GrootXmlResult
         self._BT_Name = BT_Name

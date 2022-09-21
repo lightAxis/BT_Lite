@@ -10,6 +10,10 @@ from . import ParseTotalTree
 
 
 class GrootXMLParser:
+    """Parsing information for generating code from XML file from Groot.  
+    use Parse() function
+    """
+
     def __init__(self, xmlPath: str):
         self._xmlPath = xmlPath
         self._tree = ETree.parse(xmlPath)
@@ -22,6 +26,11 @@ class GrootXMLParser:
         self._ParentChilds: List[ParentChild_t] = []
 
     def Parse(self) -> GrootXMLParser_out_t:
+        """Parse information for code generation from XML made by Groot
+
+        Returns:
+            GrootXMLParser_out_t: outputs struct
+        """
 
         self.__fillStacks()
         return GrootXMLParser_out_t(TreeNodesModels=self._TreeNodesModels,

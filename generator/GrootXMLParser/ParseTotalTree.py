@@ -4,6 +4,17 @@ from .EnumsStructs import *
 
 
 def Parse(MainSubTree: ETree.Element, SubTrees: List[SubTree_t], CustomNodes: List[TreeNodesModel_t]) -> Tuple[List[TotalTree_t], List[ParentChild_t]]:
+    """Parse total tree and parent-child infos from mainTree
+
+    Args:
+        MainSubTree (ETree.Element): main root tree
+        SubTrees (List[SubTree_t]): all subtrees list
+        CustomNodes (List[TreeNodesModel_t]): all custom node infos
+
+    Returns:
+        Tuple[List[TotalTree_t], List[ParentChild_t]]: totalTree, parentChild
+    """
+
     resultsTotalTree: List[TotalTree_t] = []
     resultsParentChild: List[TotalTree_t] = []
 
