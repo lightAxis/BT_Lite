@@ -97,6 +97,7 @@ class TotalTree_t:
     Attrib: Dict[str, str] = None
     UID: int = None
     ChildNum: int = None
+    Children: List[int] = None
     TreeNodePtr: ETree.Element = None
     isCustom: bool = False
     CustomPtr: TreeNodesModel_t = None
