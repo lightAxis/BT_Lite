@@ -18,9 +18,8 @@ namespace @(NAMESPACE)
             Control getControlType() const override { return Control::Parallel; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d\n", getName(), this->getUID());
                 printf("fail thr : %d, succ thr : %d\n", _failThr_get(), _succThr_get());
 
                 uint8_t succ_count{0};
@@ -38,19 +37,14 @@ namespace @(NAMESPACE)
 
                 if (succ_count >= _succThr_get())
                 {
-                    this->setStatus(NodeStatus::SUCCESS);
-                    return this->getStatus();
+                    return NodeStatus::SUCCESS;
                 }
                 else if (fail_count >= _failThr_get())
                 {
-                    this->setStatus(NodeStatus::FAILURE);
-                    return this->getStatus();
+                    return NodeStatus::FAILURE;
                 }
-                this->setStatus(NodeStatus::RUNNING);
-                return this->getStatus();
+                return NodeStatus::SUCCESS;
             }
-
-            void Reset() override {}
 
         private:
             delegate<uint8_t(void)> _failThr_get;

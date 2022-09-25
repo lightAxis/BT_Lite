@@ -50,10 +50,8 @@ print("\t\t\t\t"+", ".join(ClassConstructorInits)+"{}")
             @(NodeType) get@(NodeType)Type() const override { return @(NodeType)::@(NodeName); }
             char *getName() const override { return Cvt::get@(NodeType)Name(get@(NodeType)Type()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), getUID());
-
                 // prepare output values
 @[for tempStr in TickFuncInfo.before]@
                 @(tempStr);
@@ -63,20 +61,17 @@ print("\t\t\t\t"+", ".join(ClassConstructorInits)+"{}")
 @[for tempStr in TickFuncInfo.after]@
                 @(tempStr);
 @[end for]
-                setStatus(result);
-                return getStatus();
+                return result;
             }
 
-            void Reset() override {}
-
         private:
+            // getter & setter
 @[for del_info in DelegateInfos]
             @(del_info.TypedefName) @(del_info.VariableName);
 @[end for]
-            //_getter_b1 _get_b1;
-            //_setter_b2 _set_b2;
+            // tick delegate
             @(TickDelInfo.TypedefName) *@(TickDelInfo.VariableName);
-            //TickDel *_tickDel;
+
         };
     }
 }

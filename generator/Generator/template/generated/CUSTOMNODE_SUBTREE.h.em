@@ -40,17 +40,11 @@ namespace @(NAMESPACE)
             @(NodeType) get@(NodeType)Type() const override { return @(NodeType)::@(NodeName); }
             char *getName() const override { return Cvt::get@(NodeType)Name(get@(NodeType)Type()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), getUID());
-
                 NodeStatus result = this->_child->Tick();
-
-                setStatus(result);
-                return getStatus();
+                return result;
             }
-
-            void Reset() override {}
 
         private:
         };

@@ -16,31 +16,25 @@ namespace @(NAMESPACE)
             Control getControlType() const override { return Control::ReactiveSequence; }
             char *getName() const override { return Cvt::getControlName(getControlType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), this->getUID());
                 for (uint8_t i = _last_child_idx; i < this->_child_num; i++)
                 {
                     NodeStatus result = this->_children[i]->Tick();
                     if (result == NodeStatus::FAILURE)
                     {
                         _last_child_idx = 0;
-                        this->setStatus(NodeStatus::FAILURE);
-                        return this->getStatus();
+                        return NodeStatus::FAILURE;
                     }
                     else if (result == NodeStatus::RUNNING)
                     {
                         _last_child_idx = 0;
-                        this->setStatus(NodeStatus::RUNNING);
-                        return this->getStatus();
+                        return NodeStatus::RUNNING;
                     }
                 }
                 _last_child_idx = 0;
-                this->setStatus(NodeStatus::SUCCESS);
-                return this->getStatus();
+                return NodeStatus::SUCCESS;
             }
-
-            void Reset() override {}
 
         private:
             uint8_t _last_child_idx{0};
