@@ -9,19 +9,16 @@ namespace @(NAMESPACE)
         class ACTION_AlwaysFailure : public ActionBase
         {
         public:
-            ACTION_AlwaysFailure() : ActionBase() { setStatus(NodeStatus::FAILURE); }
+            ACTION_AlwaysFailure() : ActionBase() {}
             virtual ~ACTION_AlwaysFailure() = default;
 
             Action getActionType() const override { return Action::AlwaysFailure; }
             char *getName() const override { return Cvt::getActionName(getActionType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
-                printf("name:%s, uid:%d Ticked\n", getName(), getUID());
                 return NodeStatus::FAILURE;
             }
-
-            void Reset() override {}
 
         private:
         };

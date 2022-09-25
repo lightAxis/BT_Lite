@@ -15,14 +15,11 @@ namespace @(NAMESPACE)
             SubTree getSubTreeType() const override { return SubTree::RootTree; }
             char *getName() const override { return Cvt::getSubTreeName(getSubTreeType()); }
 
-            NodeStatus Tick() override
+            NodeStatus TickContent() override
             {
                 NodeStatus result = _child->Tick();
-                setStatus(result);
-                return getStatus();
+                return result;
             }
-
-            void Reset() override {}
         };
     }
 }

@@ -25,6 +25,7 @@ def Parse(MainSubTree: ETree.Element, SubTrees: List[SubTree_t], CustomNodes: Li
     resultsTotalTree.append(root)
 
     for info in resultsTotalTree:
+        info.Children = []
         children: ETree.Element = __expandChildrenFromTreeNode(
             node=info.TreeNodePtr, subTrees=SubTrees)
 
@@ -34,6 +35,7 @@ def Parse(MainSubTree: ETree.Element, SubTrees: List[SubTree_t], CustomNodes: Li
             new_ParentChild.ChildrenIdxs = list(
                 range(len(resultsTotalTree), len(resultsTotalTree)+len(children)))
             resultsParentChild.append(new_ParentChild)
+            info.Children = [x+1 for x in new_ParentChild.ChildrenIdxs]
 
         for child in children:
             new_TotalTree_t: TotalTree_t = __parseTotalTree_t(
@@ -61,6 +63,7 @@ def __parseTatalTree_t_Root(Node: ETree.Element) -> TotalTree_t:
     result: TotalTree_t = TotalTree_t()
     result.Attrib = Node.attrib
     result.ChildNum = 1
+    result.Children = []
     result.NodeType = eNodeType.SubTree
     result.Tag = "BehaviorTree"
     result.isCustom = False
