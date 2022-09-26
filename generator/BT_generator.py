@@ -19,7 +19,6 @@ except ImportError as e:
 from GrootXMLParser.GrootXMLParser import GrootXMLParser as GXMLP
 from Generator.Generator import Generator as CodeGen
 
-
 if __name__ == "__main__":
     print("this is main")
     now = os.path.abspath(__file__)

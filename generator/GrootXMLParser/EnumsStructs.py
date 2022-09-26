@@ -8,11 +8,12 @@ import xml.etree.ElementTree as ETree
 
 
 class eNodeType(IntEnum):
-    Action = 0,
-    Condition = 1,
-    Control = 2,
-    Decorator = 3,
-    SubTree = 4,
+    UNDEFINED = 0,
+    Action = 1,
+    Condition = 2,
+    Control = 3,
+    Decorator = 4,
+    SubTree = 5,
 
 
 class eAction_base(IntEnum):

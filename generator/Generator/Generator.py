@@ -13,6 +13,9 @@ from . import GenCommon
 from . import GenBase
 from .GenCustoms import GenCustoms
 
+from .GenFlatBuffer import Gen as FlatbufferGen
+from .GenFlatBufferXML import GenFlatBufferXML as FlatBufferXMLGen
+
 
 class Generator:
     """Generator for BT custom codes
@@ -38,6 +41,9 @@ class Generator:
 
     def Generate(self) -> None:
 
+        # FlatbufferGen.Generate(self._GenerationIngredient)
+        FlatBufferXMLGen.Generate(self._GenerationIngredient)
+
         if (os.path.exists(self._CodeGenPath) == True):
             shutil.rmtree(self._CodeGenPath)
         self.__makeBTDirectory(self._CodeGenPath)
@@ -50,6 +56,10 @@ class Generator:
         pass
 
     def __makeBTDirectory(self, CodeGenPath: str) -> None:
+        parentDir = os.path.dirname(CodeGenPath)
+
+        if (os.path.exists(parentDir) == False):
+            os.mkdir(parentDir)
         if (os.path.exists(CodeGenPath) == False):
             os.mkdir(CodeGenPath)
         pass

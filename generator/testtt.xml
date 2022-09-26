@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TreeModel>
+	<Nodes>
+		<node uid="2">
+			<children_uid array="child">
+				<child>3</child>
+				<child>4</child>
+				<child>5</child>
+			</children_uid>
+			<port_remaps array="PortModel">
+				<PortModel port_name="dd" set="fee" />
+				<PortModel port_name="dd2" set="fee2" />
+			</port_remaps>
+		</node>
+		<node uid="3" />
+	</Nodes>
+	<Node_Models />
+</TreeModel>
