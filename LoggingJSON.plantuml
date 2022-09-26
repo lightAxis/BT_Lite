@@ -19,10 +19,9 @@
             "port_remaps" : 
             [
                 {
-                    "structName" : "table PortModel",
-                    "port_name" : "PortDirection",
-                    "type_info" : "string",
-                    "description" : "string"
+                    "structName" : "table PortConfig",
+                    "port_name" : "string",
+                    "remap" : "string"
                 }
             ]
         }

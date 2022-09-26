@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/generator/BT_generator.py",
             "cwd": "${workspaceFolder}/generator",
             "console": "integratedTerminal",
             "justMyCode": true
