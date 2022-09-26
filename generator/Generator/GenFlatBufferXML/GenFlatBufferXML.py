@@ -1,61 +1,120 @@
 #!usr/bin/env python3
 
+from tkinter import E
 from GrootXMLParser import EnumsStructs
 import os
+
+from typing import List, Dict, Tuple
 
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 
 def Generate(input: EnumsStructs.GenerationIngredients_t) -> None:
-    root = Element("TreeModel")
+    root = Element("BehaviorTree")
 
-    nodes = Element("Nodes")
-    node_models = Element("Node_Models")
-    root.append(nodes)
-    root.append(node_models)
-
-    node1 = Element("node")
-    node1.set('uid', '2')
-    nodes.append(node1)
-
-    children1 = Element("children_uid")
-    children1.set('array', 'child')
-    node1.append(children1)
-
-    child1 = Element("child")
-    child1.text = "3"
-    child2 = Element("child")
-    child2.text = "4"
-    child3 = Element("child")
-    child3.text = "5"
-    children1.append(child1)
-    children1.append(child2)
-    children1.append(child3)
-
-    portremaps1 = Element("port_remaps")
-    portremaps1.set('array', 'PortModel')
-    node1.append(portremaps1)
-
-    portModel1 = Element("PortModel")
-    portModel1.set('port_name', 'dd')
-    portModel1.set('set', 'fee')
-    portremaps1.append(portModel1)
-
-    portModel2 = Element("PortModel")
-    portModel2.set('port_name', 'dd2')
-    portModel2.set('set', 'fee2')
-    portremaps1.append(portModel2)
-
-    node2 = Element("node")
-    node2.set('uid', '3')
-    nodes.append(node2)
+    root.append(__MakeNodes(input))
+    root.append(__MakeNodeModels(input))
 
     __pretty_print(root)
 
     tree = ElementTree(root)
 
-    buf = open("testtt.xml", 'wb')
+    buf = open("BehaviorTree.xml", 'wb')
     tree.write(buf, encoding='utf-8', xml_declaration=True)
+    pass
+
+
+def __MakeNodes(input: EnumsStructs.GenerationIngredients_t) -> Element:
+
+    nodes: Element = Element('nodes')
+    nodes.set("array", "TreeNode")
+
+    for tree_t in input.ParsedGroot.TotalTree:
+        node: Element = Element("TreeNode")
+        node.set("uid", str(tree_t.UID))
+        node.append(__MakeChildrenUIDs(tree_t))
+        node.set("status", "IDLE")
+        node.set("instance_name", tree_t.Name)
+        node.set("registration_name", tree_t.Name)
+        node.append(__MakePortRemaps(tree_t))
+        nodes.append(node)
+
+    return nodes
+    pass
+
+
+def __MakeChildrenUIDs(node: EnumsStructs.TotalTree_t) -> Element:
+    children = Element("children_uid")
+    children.set("array", "uid")
+
+    for uid in node.Children:
+        element = Element("uid")
+        element.text = str(uid)
+        children.append(element)
+    return children
+    pass
+
+
+def __MakePortRemaps(node: EnumsStructs.TotalTree_t) -> Element:
+    portRemap: Element = Element("port_remaps")
+    portRemap.set("array", "PortConfig")
+
+    for key in node.Attrib.keys():
+        if(key == "ID"):
+            continue
+
+        element = Element("PortConfig")
+        element.set("port_name", key)
+        element.set("remap", node.Attrib[key])
+        portRemap.append(element)
+    return portRemap
+    pass
+
+
+def __MakeNodeModels(input: EnumsStructs.GenerationIngredients_t) -> Element:
+    nodeModels: Element = Element("node_models")
+    nodeModels.set("array", "NodeModel")
+
+    for nodemodel in input.CustomGenerations.Actions:
+        nodeModels.append(__MakeNodeModel(nodemodel))
+    for nodemodel in input.CustomGenerations.Conditions:
+        nodeModels.append(__MakeNodeModel(nodemodel))
+    for nodemodel in input.CustomGenerations.Controls:
+        nodeModels.append(__MakeNodeModel(nodemodel))
+    for nodemodel in input.CustomGenerations.Decorators:
+        nodeModels.append(__MakeNodeModel(nodemodel))
+    for nodemodel in input.CustomGenerations.SubTrees:
+        nodeModels.append(__MakeNodeModel(nodemodel))
+
+    return nodeModels
+    pass
+
+
+def __MakeNodeModel(nodemodel: EnumsStructs.TreeNodesModel_t) -> Element:
+    element = Element("NodeModel")
+    element.set("registration_name", nodemodel.ID)
+    element.set("type", nodemodel.NodeType.name)
+    element.append(__MakePorts(nodemodel))
+    return element
+    pass
+
+
+def __MakePorts(node: EnumsStructs.TreeNodesModel_t) -> Element:
+    ports = Element("ports")
+    ports.set("array", "PortModel")
+
+    for param in node.Params:
+        element = Element("PortModel")
+        element.set("port_name", param.Name)
+        element.set("direction", param.Direction.name)
+        element.set("type_info", param.VariableType)
+        if(param.Desc == None):
+            element.set("description", "")
+        else:
+            element.set("description", param.Desc)
+        ports.append(element)
+
+    return ports
     pass
 
 

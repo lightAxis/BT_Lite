@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BehaviorTree>
+	<nodes array="TreeNode">
+		<TreeNode uid="1" status="IDLE" instance_name="RootTree" registration_name="RootTree">
+			<children_uid array="uid">
+				<uid>2</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="2" status="IDLE" instance_name="Fallback" registration_name="Fallback">
+			<children_uid array="uid">
+				<uid>3</uid>
+				<uid>4</uid>
+				<uid>5</uid>
+				<uid>6</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="3" status="IDLE" instance_name="Inverter" registration_name="Inverter">
+			<children_uid array="uid">
+				<uid>7</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="4" status="IDLE" instance_name="Inverter" registration_name="Inverter">
+			<children_uid array="uid">
+				<uid>8</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="5" status="IDLE" instance_name="subtree1" registration_name="subtree1">
+			<children_uid array="uid">
+				<uid>9</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="6" status="IDLE" instance_name="subtree2" registration_name="subtree2">
+			<children_uid array="uid">
+				<uid>10</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="7" status="IDLE" instance_name="CustomCondition1" registration_name="CustomCondition1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="8" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="5__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="9" status="IDLE" instance_name="ForceFailure" registration_name="ForceFailure">
+			<children_uid array="uid">
+				<uid>11</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="10" status="IDLE" instance_name="Sequence" registration_name="Sequence">
+			<children_uid array="uid">
+				<uid>12</uid>
+				<uid>13</uid>
+				<uid>14</uid>
+				<uid>15</uid>
+				<uid>16</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="11" status="IDLE" instance_name="IfThenElse" registration_name="IfThenElse">
+			<children_uid array="uid">
+				<uid>17</uid>
+				<uid>18</uid>
+				<uid>19</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="12" status="IDLE" instance_name="ForceSuccess" registration_name="ForceSuccess">
+			<children_uid array="uid">
+				<uid>20</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="13" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="4__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="14" status="IDLE" instance_name="CustomAction2" registration_name="CustomAction2">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="8__int" />
+				<PortConfig port_name="key2" remap="{b3__int}" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="15" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="16" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="17" status="IDLE" instance_name="CustomCondition2" registration_name="CustomCondition2">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="18" status="IDLE" instance_name="CustomAction2" registration_name="CustomAction2">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="5__int" />
+				<PortConfig port_name="key2" remap="{b1__int}" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="19" status="IDLE" instance_name="Parallel" registration_name="Parallel">
+			<children_uid array="uid">
+				<uid>21</uid>
+				<uid>22</uid>
+				<uid>23</uid>
+				<uid>24</uid>
+			</children_uid>
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="failure_threshold" remap="1__uint8_t" />
+				<PortConfig port_name="success_threshold" remap="{b2__uint8_t}" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="20" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="4__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="21" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="22" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="23" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="4__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="24" status="IDLE" instance_name="subtree2" registration_name="subtree2">
+			<children_uid array="uid">
+				<uid>25</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="25" status="IDLE" instance_name="Sequence" registration_name="Sequence">
+			<children_uid array="uid">
+				<uid>26</uid>
+				<uid>27</uid>
+				<uid>28</uid>
+				<uid>29</uid>
+				<uid>30</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="26" status="IDLE" instance_name="ForceSuccess" registration_name="ForceSuccess">
+			<children_uid array="uid">
+				<uid>31</uid>
+			</children_uid>
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="27" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="4__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="28" status="IDLE" instance_name="CustomAction2" registration_name="CustomAction2">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="8__int" />
+				<PortConfig port_name="key2" remap="{b3__int}" />
+			</port_remaps>
+		</TreeNode>
+		<TreeNode uid="29" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="30" status="IDLE" instance_name="AlwaysSuccess" registration_name="AlwaysSuccess">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig" />
+		</TreeNode>
+		<TreeNode uid="31" status="IDLE" instance_name="CustomAction1" registration_name="CustomAction1">
+			<children_uid array="uid" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="key1" remap="4__uint8_t" />
+			</port_remaps>
+		</TreeNode>
+	</nodes>
+	<node_models array="NodeModel">
+		<NodeModel registration_name="CustomAction1" type="Action">
+			<ports array="PortModel">
+				<PortModel port_name="key1" direction="input_port" type_info="uint8_t" description="nownow" />
+			</ports>
+		</NodeModel>
+		<NodeModel registration_name="CustomAction2" type="Action">
+			<ports array="PortModel">
+				<PortModel port_name="key1" direction="input_port" type_info="int" description="" />
+				<PortModel port_name="key2" direction="output_port" type_info="int" description="" />
+			</ports>
+		</NodeModel>
+		<NodeModel registration_name="CustomCondition1" type="Condition">
+			<ports array="PortModel" />
+		</NodeModel>
+		<NodeModel registration_name="CustomCondition2" type="Condition">
+			<ports array="PortModel" />
+		</NodeModel>
+		<NodeModel registration_name="subtree1" type="SubTree">
+			<ports array="PortModel" />
+		</NodeModel>
+		<NodeModel registration_name="subtree2" type="SubTree">
+			<ports array="PortModel" />
+		</NodeModel>
+	</node_models>
+</BehaviorTree>
