@@ -9,6 +9,10 @@ endif ()
 include_directories(include)
 add_executable(test src/test.cpp)
 
+message(${Python3_EXECUTABLE})
+message(${CMAKE_SOURCE_DIR}/generator/BT_generator.py)
+message(${CMAKE_SOURCE_DIR}/test_gen/BT_GEN/BT_GEN.h)
+
 add_custom_command(
     OUTPUT "${CMAKE_SOURCE_DIR}/test_gen/BT_GEN/BT_GEN.h"
     COMMAND 
@@ -18,10 +22,9 @@ add_custom_command(
     COMMENT "generating bt"
 )
 
-message(${Python3_EXECUTABLE})
-message(${CMAKE_SOURCE_DIR}/generator/BT_generator.py)
-message(${CMAKE_SOURCE_DIR}/test_gen/BT_GEN/BT_GEN.h)
-
 include_directories(test_gen)
 set_property(SOURCE src/test2.cpp APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/test_gen/BT_GEN/BT_GEN.h)
 add_executable(test2 src/test2.cpp)
+
+
+add_executable(LogMaker generator/LogMaker/LogMaker.cpp)

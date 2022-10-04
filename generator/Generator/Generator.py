@@ -41,7 +41,7 @@ class Generator:
 
     def Generate(self) -> None:
 
-        # FlatbufferGen.Generate(self._GenerationIngredient)
+        FlatbufferGen.Generate(self._GenerationIngredient)
         FlatBufferXMLGen.Generate(self._GenerationIngredient)
 
         if (os.path.exists(self._CodeGenPath) == True):

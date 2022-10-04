@@ -1,7 +1,12 @@
 #!usr/bin/env python3
 
 from dataclasses import dataclass
+from distutils.command.build import build
+from readline import parse_and_bind
+from tkinter import Variable
 from typing import List, Dict, Tuple
+from unicodedata import name
+from xml.dom.expatbuilder import parseFragmentString
 
 from GrootXMLParser import EnumsStructs
 import os
@@ -27,6 +32,7 @@ def Generate(input: EnumsStructs.GenerationIngredients_t):
     for treenode in input.ParsedGroot.TotalTree:
         nodes_List.append(__MakeNode(treenode, builder))
     BehaviorTree.StartNodesVector(builder, len(nodes_List))
+    nodes_List.reverse()
     for node in nodes_List:
         builder.PrependUOffsetTRelative(node)
     TreeNodes = builder.EndVector()
@@ -42,7 +48,12 @@ def Generate(input: EnumsStructs.GenerationIngredients_t):
         nodeModels_List.append(__MakeNodeModel(model, builder))
     for model in input.CustomGenerations.SubTrees:
         nodeModels_List.append(__MakeNodeModel(model, builder))
+    nodeModels_List_base = []
+    nodeModels_List_base = __MakeNodeModel_Base(builder)
+    nodeModels_List.extend(nodeModels_List_base)
+
     BehaviorTree.StartNodeModelsVector(builder, len(nodeModels_List))
+    nodeModels_List.reverse()
     for nodemodel in nodeModels_List:
         builder.PrependUOffsetTRelative(nodemodel)
     NodeModels = builder.EndVector()
@@ -55,8 +66,10 @@ def Generate(input: EnumsStructs.GenerationIngredients_t):
 
     builder.Finish(BT)
     buf = builder.Output()
+    buffer_size = len(buf).to_bytes(length=4, byteorder='little', signed=False)
 
     buffer = open("Tree.fbl", 'wb')
+    buffer.write(buffer_size)
     buffer.write(buf)
     buffer.close()
 
@@ -83,8 +96,10 @@ def __MakeNode(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder):
 def __MakeChildrenUID(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder):
     TreeNode.StartChildrenUidVector(
         builder, len(node.Children))
-    for uid in node.Children:
-        builder.PrependUOffsetTRelative(uid)
+    children = node.Children.copy()
+    children.reverse()
+    for uid in children:
+        builder.PrependUint16(uid)
     return builder.EndVector()
     pass
 
@@ -105,9 +120,334 @@ def __MakePortRemap(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder
         ports.append(tempPortConfig)
 
     TreeNode.StartPortRemapsVector(builder, len(ports))
+    ports.reverse()
     for port in ports:
         builder.PrependUOffsetTRelative(port)
     return builder.EndVector()
+    pass
+
+
+def __MakeNodeModel_Base(builder: flatbuffers.Builder) -> List[int]:
+    NodeModel_List: List[int] = []
+    tempNode: EnumsStructs.TreeNodesModel_t = EnumsStructs.TreeNodesModel_t()
+    params: List[EnumsStructs.NodeParam_t] = []
+
+    # AlwaysFailure
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eAction_base.AlwaysFailure.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Action
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # AlwaysSuccess
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eAction_base.AlwaysSuccess.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Action
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Fallback
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Fallback.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # IFThenElse
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.IfThenElse.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # ManualSelector
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='repeat_last_selection',
+                                           Desc='if True, execute again the same child that was selected the last time',
+                                           Direction=EnumsStructs.eInputOutput.input_port,
+                                           VariableType='bool'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.ManualSelector.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Parallel
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='failure_threshold',
+                                           Desc='number of children which need to fail to trigger a FAILURE',
+                                           Direction=EnumsStructs.eInputOutput.input_port,
+                                           VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='success_threshold',
+                                           Desc='number of children which need to fail to trigger a SUCCESS',
+                                           Direction=EnumsStructs.eInputOutput.input_port,
+                                           VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Parallel.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # ReactiveFallback
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.ReactiveFallback.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # ReactiveSequence
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.ReactiveSequence.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Sequence
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Sequence.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # SequenceStar
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.SequenceStar.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Switch2
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='case_1', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_2', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='variable', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Switch2.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Switch3
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='case_1', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_2', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_3', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='variable', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Switch3.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Switch4
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='case_1', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_2', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_3', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_4', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='variable', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Switch4.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Switch5
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='case_1', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_2', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_3', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_4', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_5', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='variable', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Switch5.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Switch6
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='case_1', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_2', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_3', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_4', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_5', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='case_6', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    params.append(EnumsStructs.NodeParam_t(Name='variable', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port,
+                  VariableType='uint8_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eControl_base.Switch6.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Control
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # BlackboardCheckBool
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='return_on_mismatch', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='bool'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='bool'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='bool'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.BlackboardCheckBool.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # BlackboardCheckDouble
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='return_on_mismatch', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='float'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='float'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='float'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.BlackboardCheckDouble.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # BlackboardCheckInt
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='return_on_mismatch', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='int'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='int'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='int'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.BlackboardCheckInt.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # BlackboardCheckString
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='return_on_mismatch', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='char'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='char'))
+    params.append(EnumsStructs.NodeParam_t(Name='value_A', Desc='',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='char'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.BlackboardCheckString.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Delay
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='delay_msec', Desc='Tick the child after few milliseconds',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='int'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.Delay.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # ForceFailure
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.ForceFailure.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # ForceSuccess
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.ForceSuccess.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Inverter
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.Inverter.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # KeepRunningUntilFailure
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.KeepRunningUntilFailure.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Repeat
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='num_cycles', Desc='repeat a successful child up to N times, -1 is infinite',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='uint16_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.Repeat.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # RetryUntilSuccessful
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='num_attemps', Desc='execute again a failed child up to N times, -1 is infinite',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='uint16_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.RetryUntilSuccessful.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # Timeout
+    params = []
+    params.append(EnumsStructs.NodeParam_t(Name='msec', Desc='after a certain amount of time. halt() the running child',
+                  Direction=EnumsStructs.eInputOutput.input_port, VariableType='uint16_t'))
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eDecorator_base.Timeout.name
+    tempNode.NodeType = EnumsStructs.eNodeType.Decorator
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    # RootTree
+    params = []
+    tempNode.Params = params
+    tempNode.ID = EnumsStructs.eSubTree_base.RootTree.name
+    tempNode.NodeType = EnumsStructs.eNodeType.SubTree
+    NodeModel_List.append(__MakeNodeModel(tempNode, builder))
+
+    return NodeModel_List
     pass
 
 
@@ -141,6 +481,7 @@ def __MakePort(customNode: EnumsStructs.TreeNodesModel_t, builder: flatbuffers.B
         ports.append(port)
 
     NodeModel.StartPortsVector(builder, len(ports))
+    ports.reverse()
     for port in ports:
         builder.PrependUOffsetTRelative(port)
     return builder.EndVector()
