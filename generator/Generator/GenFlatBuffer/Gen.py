@@ -1,12 +1,6 @@
 #!usr/bin/env python3
 
-from dataclasses import dataclass
-from distutils.command.build import build
-from readline import parse_and_bind
-from tkinter import Variable
 from typing import List, Dict, Tuple
-from unicodedata import name
-from xml.dom.expatbuilder import parseFragmentString
 
 from GrootXMLParser import EnumsStructs
 import os

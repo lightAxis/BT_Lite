@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <assert.h>
 
+#define @(NAMESPACE)_TOTAL_NODE_NUM (@(NODE_NUM))
+#define @(NAMESPACE)_TOTAL_LOG_NUM (@(NAMESPACE)_TOTAL_NODE_NUM * 3)
+
 namespace @(NAMESPACE)
 {
     struct StatusChangeLog_t
@@ -55,12 +58,12 @@ namespace @(NAMESPACE)
             assert(_log_idx < TotalNodeNum * 3); // logger index over
         }
 
-        int getLogSize() { return TotalNodeNum * 3; }
+        int getLogSize() { return _log_idx; }
 
     private:
         StatusChangeLog_t _logs[TotalNodeNum * 3];
         uint16_t _log_idx{0};
     };
 
-    static Logger<@(NODE_NUM)> logger;
+    static Logger<@(NAMESPACE)_TOTAL_NODE_NUM> logger;
 }

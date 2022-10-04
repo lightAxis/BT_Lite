@@ -1,5 +1,6 @@
 #include <stdio.h>
-
+#include <fstream>
+#include <string.h>
 #include <BT_GEN/BT_GEN.h>
 
 namespace MY
@@ -82,7 +83,39 @@ int main(int argc, char **argv)
 
     BT_GEN::RootTree.build();
 
+    BT_GEN::StatusChangeLog_t *logs;
+
+    BT_GEN::logger.clearLogs();
     BT_GEN::RootTree.Tick();
+    logs = BT_GEN::logger.getLogs();
+
+    for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
+    {
+        printf("uid:%d, prevs:%d, stat:%d, data:%04X\n", logs[i].uid, logs[i].prev_status, logs[i].status, logs[i].data);
+    }
+    printf("_loggerdde_________________________\n");
+
+    uint64_t now = 203022232;
+    uint16_t logNum = BT_GEN::logger.getLogSize();
+    logNum = logNum * sizeof(BT_GEN::StatusChangeLog_t);
+    std::ofstream filePtr{"test.bin", std::ios::out | std::ios::binary};
+    filePtr.write(reinterpret_cast<const char *>(&logNum), sizeof(uint16_t));
+    filePtr.write(reinterpret_cast<const char *>(&now), sizeof(uint64_t));
+
+    for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
+    {
+        filePtr.write(reinterpret_cast<const char *>(&(logs[i].data)), sizeof(uint16_t));
+    }
+    filePtr.close();
+
+    // std::ifstream filePtr2{"test.bin", std::ios::binary};
+    // char logNum2_[2];
+    // uint16_t logNum2;
+    // filePtr2.seekg(0, std::ios::beg);
+    // filePtr2.read(logNum2_, 2);
+    // memcpy(&logNum2, logNum2_, sizeof(uint16_t));
+
+    // filePtr2.close();
 
     return 0;
 }

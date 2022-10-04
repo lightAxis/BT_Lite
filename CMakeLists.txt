@@ -25,6 +25,3 @@ add_custom_command(
 include_directories(test_gen)
 set_property(SOURCE src/test2.cpp APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/test_gen/BT_GEN/BT_GEN.h)
 add_executable(test2 src/test2.cpp)
-
-
-add_executable(LogMaker generator/LogMaker/LogMaker.cpp)

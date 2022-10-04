@@ -1,37 +1,66 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Python: Current File",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/generator/BT_generator.py",
-            "cwd": "${workspaceFolder}/generator",
-            "console": "integratedTerminal",
-            "justMyCode": true
-        },
-        {
-            "name": "g++ c++",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/test",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "gdb에 자동 서식 지정 사용",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "miDebuggerPath": "/usr/bin/gdb"
-        }
-    ]
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python: generate_bT",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/generator/BT_generator.py",
+			"cwd": "${workspaceFolder}/generator",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		},
+		{
+			"name": "Python: LogMerge.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/generator/Generator/GenFlatBuffer/LogMerge.py",
+			"cwd": "${workspaceFolder}/generator",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		},
+		{
+			"name": "test1.cpp",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/test",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "gdb에 자동 서식 지정 사용",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"miDebuggerPath": "/usr/bin/gdb"
+		},
+		{
+			"name": "test2.cpp",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/test2",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "gdb에 자동 서식 지정 사용",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"miDebuggerPath": "/usr/bin/gdb"
+		}
+	]
 }

@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     {
         BT_TEST::logger.clearLogs();
         BT_TEST::RootTree.Tick();
-        BT_TEST::logger.getLogs();
+        logs = BT_TEST::logger.getLogs();
         logCount = BT_TEST::logger.getLogSize();
     }
     return 0;

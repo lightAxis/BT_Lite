@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <assert.h>
 
+#define BT_TEST_TOTAL_NODE_NUM (9)
+#define BT_TEST_TOTAL_LOG_NUM (BT_TEST_TOTAL_NODE_NUM * 3)
+
 namespace BT_TEST
 {
     struct StatusChangeLog_t
@@ -62,5 +65,5 @@ namespace BT_TEST
         uint16_t _log_idx{0};
     };
 
-    static Logger<9> logger;
+    static Logger<BT_TEST_TOTAL_NODE_NUM> logger;
 }
