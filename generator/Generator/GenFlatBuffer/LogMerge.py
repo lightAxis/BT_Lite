@@ -63,7 +63,7 @@ def ParseLog(fileContent: bytes, offset: int) -> Tuple[List[log_t], int]:
         logSegcon = fileContent[index:index+len]
         index = index + len
         logSeg = int.from_bytes(logSegcon, byteorder='little', signed=False)
-        print(hex(logSeg))
+        # print(hex(logSeg))
 
         uid = logSeg & 0x0FFF
         uid = ctypes.c_uint16(uid).value

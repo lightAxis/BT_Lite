@@ -24,27 +24,64 @@ def Parse(MainSubTree: ETree.Element, SubTrees: List[SubTree_t], CustomNodes: Li
 
     resultsTotalTree.append(root)
 
-    for info in resultsTotalTree:
-        info.Children = []
-        children: ETree.Element = __expandChildrenFromTreeNode(
-            node=info.TreeNodePtr, subTrees=SubTrees)
+    children: ETree.Element = __expandChildrenFromTreeNode(
+        node=root.TreeNodePtr, subTrees=SubTrees)
+    _uid = _uid+1
 
-        if len(children) > 0:
-            new_ParentChild: ParentChild_t = ParentChild_t()
-            new_ParentChild.ParentIdx = info.UID - 1
-            new_ParentChild.ChildrenIdxs = list(
-                range(len(resultsTotalTree), len(resultsTotalTree)+len(children)))
-            resultsParentChild.append(new_ParentChild)
-            info.Children = [x+1 for x in new_ParentChild.ChildrenIdxs]
+    for child in children:
+        root.ChildrenIdx.append(_uid-1)
+        _uid = __recursiveTreeSearch(resultsTotalTree, SubTrees,
+                                     CustomNodes, root.TreeNodePtr[0], _uid)
+    for totalTree in resultsTotalTree:
+        totalTree.ChildNum = len(totalTree.ChildrenIdx)
 
-        for child in children:
-            new_TotalTree_t: TotalTree_t = __parseTotalTree_t(
-                Node=child, CustomNodes=CustomNodes)
-            _uid = _uid + 1
-            new_TotalTree_t.UID = _uid
-            resultsTotalTree.append(new_TotalTree_t)
+    for totalTree in resultsTotalTree:
+        if (totalTree.ChildNum >= 1):
+            newParentChild: ParentChild_t = ParentChild_t()
+            newParentChild.ParentIdx = totalTree.UID-1
+            newParentChild.ChildrenIdxs = totalTree.ChildrenIdx
+            resultsParentChild.append(newParentChild)
+
+    # for info in resultsTotalTree:
+    #     info.Children = []
+    #     children: ETree.Element = __expandChildrenFromTreeNode(
+    #         node=info.TreeNodePtr, subTrees=SubTrees)
+
+    #     if len(children) > 0:
+    #         new_ParentChild: ParentChild_t = ParentChild_t()
+    #         new_ParentChild.ParentIdx = info.UID - 1
+    #         new_ParentChild.ChildrenIdxs = list(
+    #             range(len(resultsTotalTree), len(resultsTotalTree)+len(children)))
+    #         resultsParentChild.append(new_ParentChild)
+    #         info.Children = [x+1 for x in new_ParentChild.ChildrenIdxs]
+
+    #     for child in children:
+    #         new_TotalTree_t: TotalTree_t = __parseTotalTree_t(
+    #             Node=child, CustomNodes=CustomNodes)
+    #         _uid = _uid + 1
+    #         new_TotalTree_t.UID = _uid
+    #         resultsTotalTree.append(new_TotalTree_t)
 
     return resultsTotalTree, resultsParentChild
+    pass
+
+
+def __recursiveTreeSearch(TotalTree: List[TotalTree_t], SubTrees: List[SubTree_t],  CustomNodes: List[TreeNodesModel_t], thisElement: ETree.Element, uid: int) -> int:
+    new_totalTree_t: TotalTree_t = __parseTotalTree_t(
+        Node=thisElement, CustomNodes=CustomNodes)
+    new_totalTree_t.UID = uid
+    TotalTree.append(new_totalTree_t)
+
+    children: ETree.Element = __expandChildrenFromTreeNode(
+        node=thisElement, subTrees=SubTrees)
+
+    uid = uid + 1
+    for child in children:
+        new_totalTree_t.ChildrenIdx.append(uid-1)
+        uid = __recursiveTreeSearch(
+            TotalTree, SubTrees, CustomNodes, child, uid)
+
+    return uid
     pass
 
 
@@ -63,7 +100,7 @@ def __parseTatalTree_t_Root(Node: ETree.Element) -> TotalTree_t:
     result: TotalTree_t = TotalTree_t()
     result.Attrib = Node.attrib
     result.ChildNum = 1
-    result.Children = []
+    result.ChildrenIdx = []
     result.NodeType = eNodeType.SubTree
     result.Tag = "BehaviorTree"
     result.isCustom = False
@@ -83,8 +120,8 @@ def __parseTotalTree_t(Node: ETree.Element, CustomNodes: List[TreeNodesModel_t])
     result.Attrib = Node.attrib
     # parse TreeNodePtr
     result.TreeNodePtr = Node
-    # parse ChildNum
-    result.ChildNum = len(Node)
+    # make Children
+    result.ChildrenIdx = []
     # parse NodeType, Name, isCustom, CustomPtr
     result.NodeType, result.Name, result.isCustom, result.CustomPtr = __parseNodeTypeFromNode(
         Tag=Node.tag, ID=Node.attrib.get('ID'), CustomNodes=CustomNodes)

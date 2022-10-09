@@ -89,10 +89,11 @@ def __MakeNode(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder):
 
 def __MakeChildrenUID(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder):
     TreeNode.StartChildrenUidVector(
-        builder, len(node.Children))
-    children = node.Children.copy()
-    children.reverse()
-    for uid in children:
+        builder, len(node.ChildrenIdx))
+    childrenUID = node.ChildrenIdx.copy()
+    childrenUID = [x+1 for x in childrenUID]
+    childrenUID.reverse()
+    for uid in childrenUID:
         builder.PrependUint16(uid)
     return builder.EndVector()
     pass

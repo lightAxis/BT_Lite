@@ -31,12 +31,18 @@ namespace MY
         NodeStatus TickDelegate3(NODE::NodeBase *node)
         {
             printf("this is node : %s, customTickk3\n", node->getName());
+            customCond1++;
+            if (customCond1 >= 5)
+                return NodeStatus::FAILURE;
             return NodeStatus::SUCCESS;
         }
 
         NodeStatus TickDelegate4(NODE::NodeBase *node)
         {
             printf("this is node : %s, customTick4\n", node->getName());
+            customCond2++;
+            if (customCond2 >= 3)
+                return NodeStatus::FAILURE;
             return NodeStatus::SUCCESS;
         }
 
@@ -64,11 +70,13 @@ namespace MY
         delegate<NodeStatus(NODE::NodeBase *)> makeTickDel4()
         {
             delegate<NodeStatus(NODE::NodeBase *)> del;
-            del.set<testTick, &testTick::TickDelegate3>(*this);
+            del.set<testTick, &testTick::TickDelegate4>(*this);
             return del;
         }
 
     private:
+        int customCond1{0};
+        int customCond2{0};
     };
 }
 
@@ -84,28 +92,33 @@ int main(int argc, char **argv)
     BT_GEN::RootTree.build();
 
     BT_GEN::StatusChangeLog_t *logs;
-
-    BT_GEN::logger.clearLogs();
-    BT_GEN::RootTree.Tick();
-    logs = BT_GEN::logger.getLogs();
-
-    for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
-    {
-        printf("uid:%d, prevs:%d, stat:%d, data:%04X\n", logs[i].uid, logs[i].prev_status, logs[i].status, logs[i].data);
-    }
-    printf("_loggerdde_________________________\n");
-
-    uint64_t now = 203022232;
-    uint16_t logNum = BT_GEN::logger.getLogSize();
-    logNum = logNum * sizeof(BT_GEN::StatusChangeLog_t);
     std::ofstream filePtr{"test.bin", std::ios::out | std::ios::binary};
-    filePtr.write(reinterpret_cast<const char *>(&logNum), sizeof(uint16_t));
-    filePtr.write(reinterpret_cast<const char *>(&now), sizeof(uint64_t));
+    uint64_t now = 204284323;
+    uint16_t logNum;
 
-    for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
+    for (int i = 0; i < 6; i++)
     {
-        filePtr.write(reinterpret_cast<const char *>(&(logs[i].data)), sizeof(uint16_t));
+        BT_GEN::logger.clearLogs();
+        BT_GEN::RootTree.Tick();
+
+        logs = BT_GEN::logger.getLogs();
+        logNum = BT_GEN::logger.getLogSize() * sizeof(BT_GEN::StatusChangeLog_t);
+        for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
+        {
+            printf("uid:%d, prevs:%d, stat:%d, data:%04X\n", logs[i].uid, logs[i].prev_status, logs[i].status, logs[i].data);
+        }
+        printf("_loggerdde_________________________\n");
+
+        filePtr.write(reinterpret_cast<const char *>(&logNum), sizeof(uint16_t));
+        filePtr.write(reinterpret_cast<const char *>(&now), sizeof(uint64_t));
+        for (int i = 0; i < BT_GEN::logger.getLogSize(); i++)
+        {
+            filePtr.write(reinterpret_cast<const char *>(&(logs[i].data)), sizeof(uint16_t));
+        }
+
+        now = now + 1 * 1000000;
     }
+
     filePtr.close();
 
     // std::ifstream filePtr2{"test.bin", std::ios::binary};

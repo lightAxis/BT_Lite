@@ -47,7 +47,7 @@ def __MakeChildrenUIDs(node: EnumsStructs.TotalTree_t) -> Element:
     children = Element("children_uid")
     children.set("array", "uid")
 
-    for uid in node.Children:
+    for uid in node.ChildrenIdx:
         element = Element("uid")
         element.text = str(uid)
         children.append(element)
@@ -60,7 +60,7 @@ def __MakePortRemaps(node: EnumsStructs.TotalTree_t) -> Element:
     portRemap.set("array", "PortConfig")
 
     for key in node.Attrib.keys():
-        if(key == "ID"):
+        if (key == "ID"):
             continue
 
         element = Element("PortConfig")
@@ -108,7 +108,7 @@ def __MakePorts(node: EnumsStructs.TreeNodesModel_t) -> Element:
         element.set("port_name", param.Name)
         element.set("direction", param.Direction.name)
         element.set("type_info", param.VariableType)
-        if(param.Desc == None):
+        if (param.Desc == None):
             element.set("description", "")
         else:
             element.set("description", param.Desc)
