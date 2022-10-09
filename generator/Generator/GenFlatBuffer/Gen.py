@@ -74,7 +74,7 @@ def __MakeNode(node: EnumsStructs.TotalTree_t, builder: flatbuffers.Builder):
 
     childrenUID = __MakeChildrenUID(node, builder)
     portRemaps = __MakePortRemap(node, builder)
-    instanceName = builder.CreateString(node.Name)
+    instanceName = builder.CreateString(node.InstanceName)
     registrationName = builder.CreateString(node.Name)
     TreeNode.Start(builder)
     TreeNode.AddUid(builder, node.UID)

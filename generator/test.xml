@@ -4,7 +4,7 @@
     <BehaviorTree ID="RootTree">
         <Fallback>
             <Inverter>
-                <Condition ID="CustomCondition1"/>
+                <Condition ID="CustomCondition1" name="CustomCondition1_5off"/>
             </Inverter>
             <Inverter>
                 <Action ID="CustomAction1" key1="5__uint8_t"/>
@@ -17,8 +17,8 @@
     <BehaviorTree ID="subtree1">
         <ForceFailure>
             <IfThenElse>
-                <Condition ID="CustomCondition2"/>
-                <Parallel failure_threshold="1__uint8_t" success_threshold="{b2__uint8_t}">
+                <Condition ID="CustomCondition2" name="CustomCondition2_3off"/>
+                <Parallel failure_threshold="1__uint8_t" name="Parallel_jiseok" success_threshold="{b2__uint8_t}">
                     <AlwaysSuccess/>
                     <AlwaysSuccess/>
                     <Action ID="CustomAction1" key1="4__uint8_t"/>

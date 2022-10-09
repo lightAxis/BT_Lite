@@ -34,7 +34,7 @@ if __name__ == "__main__":
     now_test_gen = os.path.dirname(now_dir)
     now_test_gen = os.path.join(now_test_gen, "test_gen")
 
-    codegen: CodeGen = CodeGen(ParserResult, "BT_GEN", now_test_gen)
+    codegen: CodeGen = CodeGen(ParserResult, "BT_TEST", now_test_gen)
     codegen.Generate()
 
 else:

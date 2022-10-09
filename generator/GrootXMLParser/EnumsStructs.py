@@ -96,6 +96,7 @@ class TotalTree_t:
     Tag: str = None
     NodeType: eNodeType = None
     Name: str = None
+    InstanceName: str = None
     Attrib: Dict[str, str] = None
     UID: int = None
     ChildNum: int = None

@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="RootTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="CHECK_SAFETY">
+        <Sequence name="">
+            <Condition ID="distanceSensorUpdated" name=""/>
+            <Parallel failure_threshold="1__uint8_t" name="" success_threshold="0__uint8_t">
+                <Sequence name="">
+                    <Condition ID="distanceSensorUsable" name=""/>
+                    <Action ID="LPF_update" name=""/>
+                    <Inverter name="">
+                        <Condition ID="distanceOverSafe"/>
+                    </Inverter>
+                    <Action ID="renewLastNotSafeTime"/>
+                </Sequence>
+                <Sequence name="">
+                    <Condition ID="enoughTime2Return"/>
+                    <IfThenElse name="">
+                        <Condition ID="lastStateWasMission"/>
+                        <Action ID="vehicleMissionStart"/>
+                        <AlwaysSuccess name=""/>
+                    </IfThenElse>
+                    <Action ID="LPF_reset" name=""/>
+                    <Action ID="set_modeParam" modeVal="1__uint8_t" name="" param="{mode__uint8_t}"/>
+                </Sequence>
+            </Parallel>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="HOLD">
+        <Sequence>
+            <Condition ID="distanceSensorUpdated"/>
+            <Condition ID="enoughTime2Hold"/>
+            <Action ID="renewLastNotSafeTime"/>
+            <Action ID="set_modeParam" modeVal="3__uint8_t" param="{mode__uint8_t}"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="INIT">
+        <Sequence>
+            <Condition ID="distanceSensorUpdated"/>
+            <Condition ID="distanceSensorUsable"/>
+            <Action ID="LPF_reset"/>
+            <Action ID="set_modeParam" modeVal="1__uint8_t" param="{mode__uint8_t}"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="OBSERVE">
+        <Sequence>
+            <Condition ID="distanceSensorUpdated"/>
+            <Condition ID="distanceSensorUsable"/>
+            <Action ID="LPF_update"/>
+            <Inverter name="">
+                <Condition ID="IgnoreObserve"/>
+            </Inverter>
+            <Condition ID="needHold"/>
+            <Action ID="holdVehicle"/>
+            <Action ID="set_modeParam" modeVal="2__uint8_t" param="{mode__uint8_t}"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="RootTree">
+        <Sequence name="Sequences">
+            <Condition ID="feh_use" name="check_feh_use"/>
+            <IfThenElse name="">
+                <Condition ID="is_first" first="{isFirse__bool}"/>
+                <Action ID="InitState"/>
+                <AlwaysSuccess name=""/>
+            </IfThenElse>
+            <Switch4 case_1="0__uint8_t" case_2="1__uint8_t" case_3="2__uint8_t" case_4="3__uint8_t" variable="{mode__uint8_t}">
+                <SubTree ID="INIT"/>
+                <SubTree ID="OBSERVE"/>
+                <SubTree ID="HOLD"/>
+                <SubTree ID="CHECK_SAFETY"/>
+                <AlwaysSuccess name=""/>
+            </Switch4>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <SubTree ID="CHECK_SAFETY"/>
+        <SubTree ID="HOLD"/>
+        <SubTree ID="INIT"/>
+        <Condition ID="IgnoreObserve"/>
+        <Action ID="InitState"/>
+        <Action ID="LPF_reset"/>
+        <Action ID="LPF_update"/>
+        <SubTree ID="OBSERVE"/>
+        <Condition ID="distanceOverSafe"/>
+        <Condition ID="distanceSensorUpdated"/>
+        <Condition ID="distanceSensorUsable"/>
+        <Condition ID="enoughTime2Hold"/>
+        <Condition ID="enoughTime2Return"/>
+        <Condition ID="feh_use"/>
+        <Action ID="holdVehicle"/>
+        <Condition ID="is_first">
+            <input_port default="{isFirse__bool}" name="first"/>
+        </Condition>
+        <Condition ID="lastStateWasMission"/>
+        <Condition ID="needHold"/>
+        <Action ID="renewLastNotSafeTime"/>
+        <Action ID="set_modeParam">
+            <input_port default="0__uint8_t" name="modeVal"/>
+            <output_port default="{mode__uint8_t}" name="param">init, observe, hold, checkSafety</output_port>
+        </Action>
+        <Action ID="vehicleMissionStart"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+

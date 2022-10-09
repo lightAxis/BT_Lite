@@ -82,13 +82,15 @@ def ParseLog(fileContent: bytes, offset: int) -> Tuple[List[log_t], int]:
 
 def GenerateLogByteArray(logs: List[log_t]) -> bytearray:
     result: bytearray = bytearray()
+    num = 0
     for log in logs:
-        result.extend(ConvertToFlatBufferLogByte(log))
+        result.extend(ConvertToFlatBufferLogByte(log, num))
+        num = num + 1
     return result
     pass
 
 
-def ConvertToFlatBufferLogByte(log: log_t) -> int:
+def ConvertToFlatBufferLogByte(log: log_t, num) -> int:
     t_sec = int(log.time / 1000000)
     t_sec = struct.pack("I", t_sec)
 
@@ -117,7 +119,7 @@ if __name__ == "__main__":
     BTBytes = bytearray(BTContent)
     BTBuffer.close()
 
-    logBuffer = open("/home/jiseok/gitlab/BT_Lite/build/test.bin", 'rb')
+    logBuffer = open("/home/jiseok/github/BT_Lite/build/test.bin", 'rb')
     fileContent = logBuffer.read()
     fileContentLen = fileContent.__len__()
 

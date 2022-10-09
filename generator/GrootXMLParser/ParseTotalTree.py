@@ -105,6 +105,7 @@ def __parseTatalTree_t_Root(Node: ETree.Element) -> TotalTree_t:
     result.Tag = "BehaviorTree"
     result.isCustom = False
     result.Name = "RootTree"
+    result.InstanceName = "RootTree"
     result.TreeNodePtr = Node
     if Node.attrib['ID'] != "RootTree":
         raise NameError("RootTree name is strange, is if named 'RootTree' ??")
@@ -125,7 +126,9 @@ def __parseTotalTree_t(Node: ETree.Element, CustomNodes: List[TreeNodesModel_t])
     # parse NodeType, Name, isCustom, CustomPtr
     result.NodeType, result.Name, result.isCustom, result.CustomPtr = __parseNodeTypeFromNode(
         Tag=Node.tag, ID=Node.attrib.get('ID'), CustomNodes=CustomNodes)
-
+    # parse InstanceName
+    result.InstanceName = __parseNodeInstanceNameFromNode(
+        node=Node, name=result.Name)
     return result
     pass
 
@@ -181,4 +184,13 @@ def __parseNodeTypeFromNode(Tag: str, ID: str, CustomNodes: List[TreeNodesModel_
                 return nodeType, nodeName, isCustomType, CustomPtr
 
     raise NameError("Cannot parse node type from base & custom node infos")
+    pass
+
+
+def __parseNodeInstanceNameFromNode(node: ETree.Element, name: str) -> str:
+    InstanceName: str = None
+    InstanceName = node.attrib.get("name")
+    if (InstanceName == None):
+        InstanceName = name
+    return InstanceName
     pass

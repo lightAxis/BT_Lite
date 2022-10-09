@@ -24,11 +24,21 @@ def MakeNodeClassNames(node: TotalTree_t, ConstParams: List[ConstParam_t]) -> Tu
     variableName = "_"+className+"_"+str(node.UID)
 
     if (node.NodeType == eNodeType.Control):
-        className = className+"<"+str(node.ChildNum)+">"
+        if (nodeName == 'Switch2' or
+           nodeName == 'Switch3' or
+           nodeName == 'Switch4' or
+           nodeName == 'Switch5' or
+           nodeName == 'Switch6'):
+            variableType, _, _ = ParseVariable.Parse(
+                node.Attrib.get("variable"))
+            className = className+"<" + \
+                str(node.ChildNum)+","+str(variableType)+">"
+        else:
+            className = className+"<"+str(node.ChildNum)+">"
 
     params: List[str] = []
     for key in node.Attrib.keys():
-        if (key != 'ID'):
+        if (key != 'ID') and (key != 'name'):
             params.append(__makeParameterInputStr(node, key, ConstParams))
 
     if (node.isCustom == True) and (node.NodeType != eNodeType.SubTree):

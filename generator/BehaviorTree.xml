@@ -24,7 +24,9 @@
 		</TreeNode>
 		<TreeNode uid="4" status="IDLE" instance_name="CustomCondition1" registration_name="CustomCondition1">
 			<children_uid array="uid" />
-			<port_remaps array="PortConfig" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="name" remap="CustomCondition1_5off" />
+			</port_remaps>
 		</TreeNode>
 		<TreeNode uid="5" status="IDLE" instance_name="Inverter" registration_name="Inverter">
 			<children_uid array="uid">
@@ -60,7 +62,9 @@
 		</TreeNode>
 		<TreeNode uid="10" status="IDLE" instance_name="CustomCondition2" registration_name="CustomCondition2">
 			<children_uid array="uid" />
-			<port_remaps array="PortConfig" />
+			<port_remaps array="PortConfig">
+				<PortConfig port_name="name" remap="CustomCondition2_3off" />
+			</port_remaps>
 		</TreeNode>
 		<TreeNode uid="11" status="IDLE" instance_name="Parallel" registration_name="Parallel">
 			<children_uid array="uid">
@@ -71,6 +75,7 @@
 			</children_uid>
 			<port_remaps array="PortConfig">
 				<PortConfig port_name="failure_threshold" remap="1__uint8_t" />
+				<PortConfig port_name="name" remap="Parallel_jiseok" />
 				<PortConfig port_name="success_threshold" remap="{b2__uint8_t}" />
 			</port_remaps>
 		</TreeNode>
